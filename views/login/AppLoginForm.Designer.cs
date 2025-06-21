@@ -91,6 +91,8 @@
             txtPassword.PasswordChar = '*';
             txtPassword.Size = new Size(195, 27);
             txtPassword.TabIndex = 5;
+            txtPassword.UseSystemPasswordChar = true;
+            txtPassword.TextChanged += txtPassword_TextChanged;
             // 
             // btnAdminLogin
             // 

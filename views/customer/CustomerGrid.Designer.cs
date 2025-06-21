@@ -29,15 +29,14 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             customerDatagrid = new DataGridView();
-            customerIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            customerBindingSource1 = new BindingSource(components);
+            Id = new DataGridViewTextBoxColumn();
             nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             addressDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             phoneNumberDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             emailDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             registeredDateDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            customerBindingSource1 = new BindingSource(components);
             ((System.ComponentModel.ISupportInitialize)customerDatagrid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)customerBindingSource1).BeginInit();
             SuspendLayout();
@@ -47,7 +46,7 @@
             customerDatagrid.AutoGenerateColumns = false;
             customerDatagrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             customerDatagrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            customerDatagrid.Columns.AddRange(new DataGridViewColumn[] { customerIdDataGridViewTextBoxColumn, nameDataGridViewTextBoxColumn, addressDataGridViewTextBoxColumn, phoneNumberDataGridViewTextBoxColumn, emailDataGridViewTextBoxColumn, registeredDateDataGridViewTextBoxColumn });
+            customerDatagrid.Columns.AddRange(new DataGridViewColumn[] { Id, nameDataGridViewTextBoxColumn, addressDataGridViewTextBoxColumn, phoneNumberDataGridViewTextBoxColumn, emailDataGridViewTextBoxColumn, registeredDateDataGridViewTextBoxColumn });
             customerDatagrid.DataSource = customerBindingSource1;
             customerDatagrid.Location = new Point(21, 12);
             customerDatagrid.Name = "customerDatagrid";
@@ -55,15 +54,17 @@
             customerDatagrid.Size = new Size(1205, 447);
             customerDatagrid.TabIndex = 0;
             // 
-            // customerIdDataGridViewTextBoxColumn
+            // customerBindingSource1
             // 
-            customerIdDataGridViewTextBoxColumn.DataPropertyName = "CustomerId";
-            dataGridViewCellStyle1.BackColor = Color.LightGray;
-            customerIdDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            customerIdDataGridViewTextBoxColumn.HeaderText = "CustomerId";
-            customerIdDataGridViewTextBoxColumn.MinimumWidth = 6;
-            customerIdDataGridViewTextBoxColumn.Name = "customerIdDataGridViewTextBoxColumn";
-            customerIdDataGridViewTextBoxColumn.ReadOnly = true;
+            customerBindingSource1.DataSource = typeof(models.Customer);
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "Id";
+            Id.MinimumWidth = 6;
+            Id.Name = "Id";
+            Id.ReadOnly = true;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -100,10 +101,6 @@
             registeredDateDataGridViewTextBoxColumn.MinimumWidth = 6;
             registeredDateDataGridViewTextBoxColumn.Name = "registeredDateDataGridViewTextBoxColumn";
             // 
-            // customerBindingSource1
-            // 
-            customerBindingSource1.DataSource = typeof(models.Customer);
-            // 
             // CustomerGridView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -123,6 +120,7 @@
         private DataGridView customerDatagrid;
         private BindingSource customerBindingSource1;
         private DataGridViewTextBoxColumn customerIdDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn phoneNumberDataGridViewTextBoxColumn;

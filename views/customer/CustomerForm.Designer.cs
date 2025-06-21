@@ -40,11 +40,12 @@ namespace e_shift_app
             btnSubmit = new Button();
             btnCancel = new Button();
             sqlCommand1 = new Microsoft.Data.SqlClient.SqlCommand();
-            btnViewGrid = new Button();
             lblUsername = new Label();
             txtPassword = new Label();
             txtUsername = new TextBox();
             txtUserPassword = new TextBox();
+            label4 = new Label();
+            txtConfirmPassword = new TextBox();
             SuspendLayout();
             // 
             // txtName
@@ -113,7 +114,7 @@ namespace e_shift_app
             // 
             // btnSubmit
             // 
-            btnSubmit.Location = new Point(501, 398);
+            btnSubmit.Location = new Point(267, 455);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(94, 29);
             btnSubmit.TabIndex = 8;
@@ -123,7 +124,7 @@ namespace e_shift_app
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(258, 398);
+            btnCancel.Location = new Point(527, 455);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(94, 29);
             btnCancel.TabIndex = 9;
@@ -135,16 +136,6 @@ namespace e_shift_app
             // 
             sqlCommand1.CommandTimeout = 30;
             sqlCommand1.EnableOptimizedParameterBinding = false;
-            // 
-            // btnViewGrid
-            // 
-            btnViewGrid.Location = new Point(757, 63);
-            btnViewGrid.Name = "btnViewGrid";
-            btnViewGrid.Size = new Size(140, 29);
-            btnViewGrid.TabIndex = 10;
-            btnViewGrid.Text = "View Customers";
-            btnViewGrid.UseVisualStyleBackColor = true;
-            btnViewGrid.Click += btnViewGrid_Click;
             // 
             // lblUsername
             // 
@@ -179,17 +170,37 @@ namespace e_shift_app
             txtUserPassword.PasswordChar = '*';
             txtUserPassword.Size = new Size(248, 27);
             txtUserPassword.TabIndex = 14;
+            txtUserPassword.UseSystemPasswordChar = true;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(138, 390);
+            label4.Name = "label4";
+            label4.Size = new Size(127, 20);
+            label4.TabIndex = 15;
+            label4.Text = "Confirm Password";
+            // 
+            // txtConfirmPassword
+            // 
+            txtConfirmPassword.Location = new Point(347, 387);
+            txtConfirmPassword.Name = "txtConfirmPassword";
+            txtConfirmPassword.PasswordChar = '*';
+            txtConfirmPassword.Size = new Size(248, 27);
+            txtConfirmPassword.TabIndex = 16;
+            txtConfirmPassword.UseSystemPasswordChar = true;
             // 
             // CustomerForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(997, 459);
+            ClientSize = new Size(780, 523);
+            Controls.Add(txtConfirmPassword);
+            Controls.Add(label4);
             Controls.Add(txtUserPassword);
             Controls.Add(txtUsername);
             Controls.Add(txtPassword);
             Controls.Add(lblUsername);
-            Controls.Add(btnViewGrid);
             Controls.Add(btnCancel);
             Controls.Add(btnSubmit);
             Controls.Add(label3);
@@ -201,7 +212,8 @@ namespace e_shift_app
             Controls.Add(label1);
             Controls.Add(txtName);
             Name = "CustomerForm";
-            Text = "Customer";
+            Text = "Customer Form";
+            Load += CustomerForm_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -219,10 +231,11 @@ namespace e_shift_app
         private Button btnSubmit;
         private Button btnCancel;
         private Microsoft.Data.SqlClient.SqlCommand sqlCommand1;
-        private Button btnViewGrid;
         private Label lblUsername;
         private Label txtPassword;
         private TextBox txtUsername;
         private TextBox txtUserPassword;
+        private Label label4;
+        private TextBox txtConfirmPassword;
     }
 }

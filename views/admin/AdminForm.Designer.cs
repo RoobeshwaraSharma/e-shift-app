@@ -36,6 +36,8 @@
             txtPassword = new TextBox();
             btnRegister = new Button();
             txtReset = new Button();
+            label4 = new Label();
+            txtConfirmPassword = new TextBox();
             SuspendLayout();
             // 
             // label1
@@ -91,7 +93,7 @@
             // 
             // btnRegister
             // 
-            btnRegister.Location = new Point(200, 310);
+            btnRegister.Location = new Point(189, 339);
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(114, 29);
             btnRegister.TabIndex = 6;
@@ -101,7 +103,7 @@
             // 
             // txtReset
             // 
-            txtReset.Location = new Point(401, 310);
+            txtReset.Location = new Point(394, 339);
             txtReset.Name = "txtReset";
             txtReset.Size = new Size(114, 29);
             txtReset.TabIndex = 7;
@@ -109,11 +111,30 @@
             txtReset.UseVisualStyleBackColor = true;
             txtReset.Click += txtReset_Click;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(100, 270);
+            label4.Name = "label4";
+            label4.Size = new Size(127, 20);
+            label4.TabIndex = 8;
+            label4.Text = "Confirm Password";
+            // 
+            // txtConfirmPassword
+            // 
+            txtConfirmPassword.Location = new Point(236, 267);
+            txtConfirmPassword.Name = "txtConfirmPassword";
+            txtConfirmPassword.PasswordChar = '*';
+            txtConfirmPassword.Size = new Size(258, 27);
+            txtConfirmPassword.TabIndex = 9;
+            // 
             // AdminForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(txtConfirmPassword);
+            Controls.Add(label4);
             Controls.Add(txtReset);
             Controls.Add(btnRegister);
             Controls.Add(txtPassword);
@@ -138,5 +159,7 @@
         private TextBox txtPassword;
         private Button btnRegister;
         private Button txtReset;
+        private Label label4;
+        private TextBox txtConfirmPassword;
     }
 }

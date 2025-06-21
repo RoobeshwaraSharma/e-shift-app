@@ -25,6 +25,9 @@ namespace e_shift_app.views.login
             InitializeComponent();
             _appDbContext = appDbContext;
             _provider = provider;
+
+            // Set AcceptButton to trigger login on Enter key
+            this.AcceptButton = btnLogin; // btnLogin is the login button
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -78,6 +81,11 @@ namespace e_shift_app.views.login
             var adminLogin = _provider.GetRequiredService<AdminLogin>();
             adminLogin.Show();
             this.Hide(); // Close login form
+        }
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

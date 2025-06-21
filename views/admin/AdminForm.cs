@@ -38,12 +38,30 @@ namespace e_shift_app.views.admin
 
         private async void btnRegister_Click(object sender, EventArgs e)
         {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
+                string.IsNullOrWhiteSpace(txtUsername.Text) ||
+                string.IsNullOrWhiteSpace(txtPassword.Text) ||
+                string.IsNullOrWhiteSpace(txtConfirmPassword.Text))
+            {
+                MessageBox.Show("All fields are required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validate password match
+            if (txtPassword.Text != txtConfirmPassword.Text)
+            {
+                MessageBox.Show("Passwords do not match.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var admin = new Admins
             {
                 FullName = txtFullName.Text,
                 Username = txtUsername.Text,
                 PasswordHash = PasswordHelper.Hash(txtPassword.Text),
-                Role = "Admin"
+                Role = "Admin",
+                CreatedDate = DateTime.Now,
             };
 
             try

@@ -2,6 +2,7 @@
 using e_shift_app.lib;
 using e_shift_app.models;
 using e_shift_app.views.customer;
+using e_shift_app.views.login;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,9 @@ namespace e_shift_app.views.admin
             InitializeComponent();
             _appDbContext = appDbContext;
             _provider = provider;
+
+            // Set AcceptButton to trigger login on Enter key
+            this.AcceptButton = button1; // button1 is the login button
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -51,8 +55,8 @@ namespace e_shift_app.views.admin
                 if (admin.Role == "Admin")
                 {
                     // Resolve & show the grid form from DI
-                    var gridView = _provider.GetRequiredService<CustomerGridView>();
-                    gridView.Show();
+                    var dashboard = _provider.GetRequiredService<AdminDashboard>();
+                    dashboard.Show();
                 }
 
 
@@ -67,9 +71,14 @@ namespace e_shift_app.views.admin
         private void button2_Click(object sender, EventArgs e)
         {
             // Resolve & show the grid form from DI
-            var adminForm = _provider.GetRequiredService<AdminForm>();
-            adminForm.Show();
+            var loginForm = _provider.GetRequiredService<AppLoginForm>();
+            loginForm.Show();
             this.Hide();
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

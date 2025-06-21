@@ -33,7 +33,7 @@
             txtUsername = new TextBox();
             txtPassword = new TextBox();
             button1 = new Button();
-            button2 = new Button();
+            btnClose = new Button();
             SuspendLayout();
             // 
             // label1
@@ -67,13 +67,13 @@
             // 
             txtPassword.Location = new Point(311, 190);
             txtPassword.Name = "txtPassword";
-            txtPassword.PasswordChar = '*';
             txtPassword.Size = new Size(202, 27);
             txtPassword.TabIndex = 3;
+            txtPassword.UseSystemPasswordChar = true;
             // 
             // button1
             // 
-            button1.Location = new Point(252, 297);
+            button1.Location = new Point(233, 264);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 4;
@@ -81,22 +81,22 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // button2
+            // btnClose
             // 
-            button2.Location = new Point(438, 297);
-            button2.Name = "button2";
-            button2.Size = new Size(172, 29);
-            button2.TabIndex = 5;
-            button2.Text = "Register An Admin";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            btnClose.Location = new Point(417, 264);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(117, 29);
+            btnClose.TabIndex = 5;
+            btnClose.Text = "Close";
+            btnClose.UseVisualStyleBackColor = true;
+            btnClose.Click += button2_Click;
             // 
             // AdminLogin
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(button2);
+            Controls.Add(btnClose);
             Controls.Add(button1);
             Controls.Add(txtPassword);
             Controls.Add(txtUsername);
@@ -115,6 +115,6 @@
         private TextBox txtUsername;
         private TextBox txtPassword;
         private Button button1;
-        private Button button2;
+        private Button btnClose;
     }
 }

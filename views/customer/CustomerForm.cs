@@ -1,4 +1,3 @@
-
 using e_shift_app.db;
 using e_shift_app.lib;
 using e_shift_app.models;
@@ -20,6 +19,26 @@ namespace e_shift_app
 
         private async void btnSubmit_Click(object sender, EventArgs e)
         {
+            // Validate required fields
+            if (string.IsNullOrWhiteSpace(txtName.Text) ||
+                string.IsNullOrWhiteSpace(txtAddress.Text) ||
+                string.IsNullOrWhiteSpace(txtPhoneNumber.Text) ||
+                string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                string.IsNullOrWhiteSpace(txtUsername.Text) ||
+                string.IsNullOrWhiteSpace(txtUserPassword.Text) ||
+                string.IsNullOrWhiteSpace(txtConfirmPassword.Text))
+            {
+                MessageBox.Show("All fields are required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validate password match
+            if (txtUserPassword.Text != txtConfirmPassword.Text)
+            {
+                MessageBox.Show("Passwords do not match.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var customer = new Customer
             {
                 Name = txtName.Text,
@@ -78,6 +97,11 @@ namespace e_shift_app
         }
 
         private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CustomerForm_Load(object sender, EventArgs e)
         {
 
         }

@@ -34,7 +34,10 @@ namespace e_shift_app
                 .AddTransient<AppLoginForm>()
                 .AddTransient<CustomerGridView>()
                 .AddTransient<AdminForm>()
-                .AddTransient<AdminLogin>();
+                .AddTransient<AdminLogin>()
+                .AddTransient<AdminGrid>()
+                .AddTransient<AdminDashboard>();
+
 
             var serviceProvider = services.BuildServiceProvider();
 
