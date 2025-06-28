@@ -43,17 +43,17 @@ namespace e_shift_app.views.login
             {
                 Session.LoggedInUser = user;
 
-                if (user.Role == "Admin")
+                if (user.Role == "Customer")
                 {
                     // Resolve & show the grid form from DI
-                    var gridForm = _provider.GetRequiredService<CustomerGridView>();
-                    gridForm.Show();
+                    var customerDashboard = _provider.GetRequiredService<CustomerDashboard>();
+                    customerDashboard.Show();
                 }
-                else
+                else if (user.Role =="Admin")
                 {
                     // Resolve & show the grid form from DI
-                    var gridForm = _provider.GetRequiredService<CustomerGridView>();
-                    gridForm.Show();
+                    var adminDashboard = _provider.GetRequiredService<AdminDashboard>();
+                    adminDashboard.Show();
                 }
 
                 this.Hide(); // Close login form

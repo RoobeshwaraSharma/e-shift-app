@@ -10,7 +10,7 @@ namespace e_shift_app.models
     {
         public int LoadId { get; set; } // Primary Key
         public int JobId { get; set; } // Foreign Key
-        public int TransportUnitId { get; set; } // Foreign Key
+        public int? TransportUnitId { get; set; } // Foreign Key
         public decimal Weight { get; set; }
         public string? Description { get; set; }
 

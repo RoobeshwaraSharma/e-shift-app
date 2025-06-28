@@ -66,6 +66,11 @@ namespace e_shift_app.db
                 .HasOne(t => t.Container)
                 .WithOne(c => c.TransportUnit)
                 .HasForeignKey<TransportUnit>(t => t.ContainerId);
+
+            // Ensure default value for Job.Status
+            modelBuilder.Entity<Job>()
+                .Property(j => j.Status)
+                .HasDefaultValue(e_shift_app.models.JobStatus.Submitted);
         }
     }
 }

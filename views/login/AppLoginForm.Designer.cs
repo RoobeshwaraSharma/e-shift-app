@@ -34,12 +34,11 @@
             label2 = new Label();
             txtUsername = new TextBox();
             txtPassword = new TextBox();
-            btnAdminLogin = new Button();
             SuspendLayout();
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(193, 338);
+            btnLogin.Location = new Point(218, 338);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(94, 29);
             btnLogin.TabIndex = 0;
@@ -50,11 +49,11 @@
             // 
             // btnRegister
             // 
-            btnRegister.Location = new Point(398, 338);
+            btnRegister.Location = new Point(406, 338);
             btnRegister.Name = "btnRegister";
-            btnRegister.Size = new Size(94, 29);
+            btnRegister.Size = new Size(182, 29);
             btnRegister.TabIndex = 1;
-            btnRegister.Text = "Register";
+            btnRegister.Text = "Register as Customer";
             btnRegister.TextAlign = ContentAlignment.BottomCenter;
             btnRegister.UseVisualStyleBackColor = true;
             btnRegister.Click += btnRegister_Click;
@@ -94,23 +93,11 @@
             txtPassword.UseSystemPasswordChar = true;
             txtPassword.TextChanged += txtPassword_TextChanged;
             // 
-            // btnAdminLogin
-            // 
-            btnAdminLogin.Location = new Point(666, 21);
-            btnAdminLogin.Name = "btnAdminLogin";
-            btnAdminLogin.Size = new Size(112, 29);
-            btnAdminLogin.TabIndex = 6;
-            btnAdminLogin.Text = "Admin Login";
-            btnAdminLogin.TextAlign = ContentAlignment.BottomCenter;
-            btnAdminLogin.UseVisualStyleBackColor = true;
-            btnAdminLogin.Click += button1_Click;
-            // 
             // AppLoginForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(btnAdminLogin);
             Controls.Add(txtPassword);
             Controls.Add(txtUsername);
             Controls.Add(label2);
@@ -132,6 +119,5 @@
         private Label label2;
         private TextBox txtUsername;
         private TextBox txtPassword;
-        private Button btnAdminLogin;
     }
 }

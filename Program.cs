@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using e_shift_app.db;
 using e_shift_app.views.admin;
 using e_shift_app.views.customer;
+using e_shift_app.views.job;
 using e_shift_app.views.login;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +37,9 @@ namespace e_shift_app
                 .AddTransient<AdminForm>()
                 .AddTransient<AdminLogin>()
                 .AddTransient<AdminGrid>()
-                .AddTransient<AdminDashboard>();
+                .AddTransient<AdminDashboard>()
+                .AddTransient<CustomerDashboard>()
+                .AddTransient<JobForm>();
 
 
             var serviceProvider = services.BuildServiceProvider();
