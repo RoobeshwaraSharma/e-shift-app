@@ -10,7 +10,10 @@ namespace e_shift_app.models
     {
         public int Id { get; set; } // Primary Key
         public required string Model { get; set; }
+        public required string Year { get; set; }
         public required string RegistrationNumber { get; set; }
+        public required decimal Capacity { get; set; }
+
 
         // Navigation property
         public TransportUnit? TransportUnit { get; set; }

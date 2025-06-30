@@ -6,6 +6,8 @@ using e_shift_app.views.admin;
 using e_shift_app.views.customer;
 using e_shift_app.views.job;
 using e_shift_app.views.login;
+using e_shift_app.views.transportManagement.container;
+using e_shift_app.views.transportManagement.lorry;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +41,10 @@ namespace e_shift_app
                 .AddTransient<AdminGrid>()
                 .AddTransient<AdminDashboard>()
                 .AddTransient<CustomerDashboard>()
-                .AddTransient<JobForm>();
+                .AddTransient<JobForm>()
+                .AddTransient<LorryForm>()
+                .AddTransient<LorryGrid>()
+                .AddTransient<ContainerGrid>();
 
 
             var serviceProvider = services.BuildServiceProvider();
