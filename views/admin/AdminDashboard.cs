@@ -1,8 +1,11 @@
 ﻿using e_shift_app.db;
 using e_shift_app.models;
 using e_shift_app.views.customer;
+using e_shift_app.views.transportManagement.Assistant;
 using e_shift_app.views.transportManagement.container;
+using e_shift_app.views.transportManagement.driver;
 using e_shift_app.views.transportManagement.lorry;
+using e_shift_app.views.transportManagement.transportUnit;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Data;
@@ -38,9 +41,10 @@ namespace e_shift_app.views.admin
             customerGrid.Show();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnTransportUnit_Click(object sender, EventArgs e)
         {
-
+            var transportUnit = _provider.GetRequiredService<TransportUnitGrid>();
+            transportUnit.Show();
         }
 
         private void AdminDashboard_Load(object sender, EventArgs e)
@@ -409,6 +413,18 @@ namespace e_shift_app.views.admin
         {
             var container = _provider.GetRequiredService<ContainerGrid>();
             container.Show();
+        }
+
+        private void btnDriver_Click(object sender, EventArgs e)
+        {
+            var driver = _provider.GetRequiredService<DriverGrid>();
+            driver.Show();
+        }
+
+        private void btnAssistant_Click(object sender, EventArgs e)
+        {
+            var assistant = _provider.GetRequiredService<AssistantGrid>();
+            assistant.Show();
         }
     }
 }

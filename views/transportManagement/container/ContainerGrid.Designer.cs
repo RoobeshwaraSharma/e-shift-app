@@ -30,10 +30,11 @@
         {
             components = new System.ComponentModel.Container();
             containerGridView = new DataGridView();
-            idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            capacityDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             containerBindingSource = new BindingSource(components);
             btnAddContainer = new Button();
+            idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
+            capacityDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)containerGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)containerBindingSource).BeginInit();
             SuspendLayout();
@@ -43,7 +44,7 @@
             containerGridView.AutoGenerateColumns = false;
             containerGridView.BackgroundColor = SystemColors.GradientInactiveCaption;
             containerGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            containerGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, capacityDataGridViewTextBoxColumn });
+            containerGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, Status, capacityDataGridViewTextBoxColumn });
             containerGridView.DataSource = containerBindingSource;
             containerGridView.GridColor = SystemColors.HotTrack;
             containerGridView.Location = new Point(53, 75);
@@ -51,23 +52,6 @@
             containerGridView.RowHeadersWidth = 51;
             containerGridView.Size = new Size(419, 187);
             containerGridView.TabIndex = 0;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            idDataGridViewTextBoxColumn.HeaderText = "Id";
-            idDataGridViewTextBoxColumn.MinimumWidth = 6;
-            idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            idDataGridViewTextBoxColumn.ReadOnly = true;
-            idDataGridViewTextBoxColumn.Width = 125;
-            // 
-            // capacityDataGridViewTextBoxColumn
-            // 
-            capacityDataGridViewTextBoxColumn.DataPropertyName = "Capacity";
-            capacityDataGridViewTextBoxColumn.HeaderText = "Capacity (KG)";
-            capacityDataGridViewTextBoxColumn.MinimumWidth = 6;
-            capacityDataGridViewTextBoxColumn.Name = "capacityDataGridViewTextBoxColumn";
-            capacityDataGridViewTextBoxColumn.Width = 125;
             // 
             // containerBindingSource
             // 
@@ -82,6 +66,31 @@
             btnAddContainer.Text = "Add Container";
             btnAddContainer.UseVisualStyleBackColor = true;
             btnAddContainer.Click += btnAddContainer_Click;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            idDataGridViewTextBoxColumn.HeaderText = "Id";
+            idDataGridViewTextBoxColumn.MinimumWidth = 6;
+            idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            idDataGridViewTextBoxColumn.ReadOnly = true;
+            idDataGridViewTextBoxColumn.Width = 125;
+            // 
+            // Status
+            // 
+            Status.DataPropertyName = "Status";
+            Status.HeaderText = "Status";
+            Status.MinimumWidth = 6;
+            Status.Name = "Status";
+            Status.Width = 125;
+            // 
+            // capacityDataGridViewTextBoxColumn
+            // 
+            capacityDataGridViewTextBoxColumn.DataPropertyName = "Capacity";
+            capacityDataGridViewTextBoxColumn.HeaderText = "Capacity (KG)";
+            capacityDataGridViewTextBoxColumn.MinimumWidth = 6;
+            capacityDataGridViewTextBoxColumn.Name = "capacityDataGridViewTextBoxColumn";
+            capacityDataGridViewTextBoxColumn.Width = 125;
             // 
             // ContainerGrid
             // 
@@ -101,9 +110,10 @@
         #endregion
 
         private DataGridView containerGridView;
-        private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn capacityDataGridViewTextBoxColumn;
         private BindingSource containerBindingSource;
         private Button btnAddContainer;
+        private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn Status;
+        private DataGridViewTextBoxColumn capacityDataGridViewTextBoxColumn;
     }
 }

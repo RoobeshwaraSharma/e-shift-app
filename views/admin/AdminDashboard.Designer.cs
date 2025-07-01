@@ -33,13 +33,6 @@
             btnAdmins = new Button();
             groupBox1 = new GroupBox();
             jobsGridView = new DataGridView();
-            jobBindingSource = new BindingSource(components);
-            groupBox2 = new GroupBox();
-            btnAssistant = new Button();
-            btnDriver = new Button();
-            btnContainer = new Button();
-            btnLorry = new Button();
-            btnTransportUnit = new Button();
             jobIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             customerIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             startLocationDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -47,6 +40,13 @@
             startDateDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             endDateDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             statusDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            jobBindingSource = new BindingSource(components);
+            groupBox2 = new GroupBox();
+            btnAssistant = new Button();
+            btnDriver = new Button();
+            btnContainer = new Button();
+            btnLorry = new Button();
+            btnTransportUnit = new Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)jobsGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jobBindingSource).BeginInit();
@@ -97,72 +97,6 @@
             jobsGridView.RowHeadersWidth = 51;
             jobsGridView.Size = new Size(1150, 349);
             jobsGridView.TabIndex = 3;
-            // 
-            // jobBindingSource
-            // 
-            jobBindingSource.DataSource = typeof(models.Job);
-            // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(btnAssistant);
-            groupBox2.Controls.Add(btnDriver);
-            groupBox2.Controls.Add(btnContainer);
-            groupBox2.Controls.Add(btnLorry);
-            groupBox2.Controls.Add(btnTransportUnit);
-            groupBox2.Location = new Point(509, 26);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(660, 134);
-            groupBox2.TabIndex = 4;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Transport Management";
-            // 
-            // btnAssistant
-            // 
-            btnAssistant.Location = new Point(548, 47);
-            btnAssistant.Name = "btnAssistant";
-            btnAssistant.Size = new Size(97, 40);
-            btnAssistant.TabIndex = 6;
-            btnAssistant.Text = "Assistants";
-            btnAssistant.UseVisualStyleBackColor = true;
-            // 
-            // btnDriver
-            // 
-            btnDriver.Location = new Point(420, 47);
-            btnDriver.Name = "btnDriver";
-            btnDriver.Size = new Size(97, 40);
-            btnDriver.TabIndex = 5;
-            btnDriver.Text = "Drivers";
-            btnDriver.UseVisualStyleBackColor = true;
-            // 
-            // btnContainer
-            // 
-            btnContainer.Location = new Point(292, 47);
-            btnContainer.Name = "btnContainer";
-            btnContainer.Size = new Size(97, 40);
-            btnContainer.TabIndex = 4;
-            btnContainer.Text = "Containers";
-            btnContainer.UseVisualStyleBackColor = true;
-            btnContainer.Click += btnContainer_Click;
-            // 
-            // btnLorry
-            // 
-            btnLorry.Location = new Point(169, 47);
-            btnLorry.Name = "btnLorry";
-            btnLorry.Size = new Size(97, 40);
-            btnLorry.TabIndex = 3;
-            btnLorry.Text = "Lorries";
-            btnLorry.UseVisualStyleBackColor = true;
-            btnLorry.Click += btnLorry_Click;
-            // 
-            // btnTransportUnit
-            // 
-            btnTransportUnit.Location = new Point(16, 47);
-            btnTransportUnit.Name = "btnTransportUnit";
-            btnTransportUnit.Size = new Size(129, 40);
-            btnTransportUnit.TabIndex = 2;
-            btnTransportUnit.Text = "Transport Units";
-            btnTransportUnit.UseVisualStyleBackColor = true;
-            btnTransportUnit.Click += button1_Click;
             // 
             // jobIdDataGridViewTextBoxColumn
             // 
@@ -225,6 +159,74 @@
             statusDataGridViewTextBoxColumn.MinimumWidth = 6;
             statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
             statusDataGridViewTextBoxColumn.Width = 125;
+            // 
+            // jobBindingSource
+            // 
+            jobBindingSource.DataSource = typeof(models.Job);
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(btnAssistant);
+            groupBox2.Controls.Add(btnDriver);
+            groupBox2.Controls.Add(btnContainer);
+            groupBox2.Controls.Add(btnLorry);
+            groupBox2.Controls.Add(btnTransportUnit);
+            groupBox2.Location = new Point(509, 26);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(660, 134);
+            groupBox2.TabIndex = 4;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Transport Management";
+            // 
+            // btnAssistant
+            // 
+            btnAssistant.Location = new Point(548, 47);
+            btnAssistant.Name = "btnAssistant";
+            btnAssistant.Size = new Size(97, 40);
+            btnAssistant.TabIndex = 6;
+            btnAssistant.Text = "Assistants";
+            btnAssistant.UseVisualStyleBackColor = true;
+            btnAssistant.Click += btnAssistant_Click;
+            // 
+            // btnDriver
+            // 
+            btnDriver.Location = new Point(420, 47);
+            btnDriver.Name = "btnDriver";
+            btnDriver.Size = new Size(97, 40);
+            btnDriver.TabIndex = 5;
+            btnDriver.Text = "Drivers";
+            btnDriver.UseVisualStyleBackColor = true;
+            btnDriver.Click += btnDriver_Click;
+            // 
+            // btnContainer
+            // 
+            btnContainer.Location = new Point(292, 47);
+            btnContainer.Name = "btnContainer";
+            btnContainer.Size = new Size(97, 40);
+            btnContainer.TabIndex = 4;
+            btnContainer.Text = "Containers";
+            btnContainer.UseVisualStyleBackColor = true;
+            btnContainer.Click += btnContainer_Click;
+            // 
+            // btnLorry
+            // 
+            btnLorry.Location = new Point(169, 47);
+            btnLorry.Name = "btnLorry";
+            btnLorry.Size = new Size(97, 40);
+            btnLorry.TabIndex = 3;
+            btnLorry.Text = "Lorries";
+            btnLorry.UseVisualStyleBackColor = true;
+            btnLorry.Click += btnLorry_Click;
+            // 
+            // btnTransportUnit
+            // 
+            btnTransportUnit.Location = new Point(16, 47);
+            btnTransportUnit.Name = "btnTransportUnit";
+            btnTransportUnit.Size = new Size(129, 40);
+            btnTransportUnit.TabIndex = 2;
+            btnTransportUnit.Text = "Transport Units";
+            btnTransportUnit.UseVisualStyleBackColor = true;
+            btnTransportUnit.Click += btnTransportUnit_Click;
             // 
             // AdminDashboard
             // 

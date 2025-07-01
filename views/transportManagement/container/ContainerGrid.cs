@@ -6,17 +6,15 @@ namespace e_shift_app.views.transportManagement.container
     public partial class ContainerGrid : Form
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IServiceProvider _provider;
         private BindingList<models.Container>? containerBindingList;
 
         private int _hoveredRowIndex = -1;
         private int _hoveredButton = -1; // 0 = none, 1 = delete
 
-        public ContainerGrid(AppDbContext context, IServiceProvider provider)
+        public ContainerGrid(AppDbContext context)
         {
             InitializeComponent();
             _appDbContext = context;
-            _provider = provider;
         }
 
         private void ContainerGrid_Load(object sender, EventArgs e)

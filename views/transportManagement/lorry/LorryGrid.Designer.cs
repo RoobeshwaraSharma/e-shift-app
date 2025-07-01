@@ -38,6 +38,7 @@
             yearDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             registrationNumberDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             capacityDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)lorryGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lorryBindingSource).BeginInit();
             SuspendLayout();
@@ -47,7 +48,7 @@
             lorryGridView.AutoGenerateColumns = false;
             lorryGridView.BackgroundColor = SystemColors.ButtonFace;
             lorryGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            lorryGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, modelDataGridViewTextBoxColumn, yearDataGridViewTextBoxColumn, registrationNumberDataGridViewTextBoxColumn, capacityDataGridViewTextBoxColumn });
+            lorryGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, modelDataGridViewTextBoxColumn, yearDataGridViewTextBoxColumn, registrationNumberDataGridViewTextBoxColumn, capacityDataGridViewTextBoxColumn, Status });
             lorryGridView.DataSource = lorryBindingSource;
             lorryGridView.GridColor = SystemColors.MenuHighlight;
             lorryGridView.Location = new Point(36, 65);
@@ -122,6 +123,14 @@
             capacityDataGridViewTextBoxColumn.Name = "capacityDataGridViewTextBoxColumn";
             capacityDataGridViewTextBoxColumn.Width = 125;
             // 
+            // Status
+            // 
+            Status.DataPropertyName = "Status";
+            Status.HeaderText = "Status";
+            Status.MinimumWidth = 6;
+            Status.Name = "Status";
+            Status.Width = 125;
+            // 
             // LorryGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -149,5 +158,6 @@
         private DataGridViewTextBoxColumn yearDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn registrationNumberDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn capacityDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn Status;
     }
 }
