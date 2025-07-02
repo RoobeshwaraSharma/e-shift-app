@@ -15,7 +15,7 @@ namespace e_shift_app.views.admin
     public partial class AdminDashboard : Form
     {
         private int _hoveredRowIndex = -1;
-        private int _hoveredButton = -1; // 0 = none, 1 = delete, 2 = add load, 3 = view load
+        private int _hoveredButton = -1; // 0 = none, 1 = delete, 2 = add load, 3 = view load, 4 = approval
 
         private readonly IServiceProvider _provider;
         private readonly AppDbContext _appDbContext;
@@ -116,15 +116,15 @@ namespace e_shift_app.views.admin
             {
                 e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
-                int deleteBtnWidth = 70;
-                int spacing = 10;
-                int addLoadBtnWidth = 80;
-                int viewLoadBtnWidth = e.CellBounds.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
+                var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                if (job == null) return;
 
-                Rectangle deleteButton = new Rectangle(e.CellBounds.Left + spacing, e.CellBounds.Top + 5, deleteBtnWidth, e.CellBounds.Height - 8);
-                Rectangle addLoad = new Rectangle(e.CellBounds.Left + deleteBtnWidth + (2 * spacing), e.CellBounds.Top + 5, addLoadBtnWidth, e.CellBounds.Height - 8);
-                Rectangle viewLoad = new Rectangle(e.CellBounds.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), e.CellBounds.Top + 5, viewLoadBtnWidth, e.CellBounds.Height - 8);
+                int btnWidth = 70, spacing = 10;
+                int x = e.CellBounds.Left + spacing;
+                int y = e.CellBounds.Top + 5;
+                int h = e.CellBounds.Height - 8;
 
+                // Button states
                 var stateDelete = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 1)
                     ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
                     : System.Windows.Forms.VisualStyles.PushButtonState.Default;
@@ -134,10 +134,37 @@ namespace e_shift_app.views.admin
                 var stateView = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 3)
                     ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
                     : System.Windows.Forms.VisualStyles.PushButtonState.Default;
+                var stateApproval = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 4)
+                    ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
+                    : System.Windows.Forms.VisualStyles.PushButtonState.Default;
 
-                ButtonRenderer.DrawButton(e.Graphics, deleteButton, "Delete", jobsGridView.Font, false, stateDelete);
-                ButtonRenderer.DrawButton(e.Graphics, addLoad, "Add Load", jobsGridView.Font, false, stateAdd);
+                // Delete button (Submitted only)
+                if (job.Status == JobStatus.Submitted)
+                {
+                    Rectangle deleteButton = new Rectangle(x, y, btnWidth, h);
+                    ButtonRenderer.DrawButton(e.Graphics, deleteButton, "Delete", jobsGridView.Font, false, stateDelete);
+                    x += btnWidth + spacing;
+                }
+
+                // Add Load button (Approved only)
+                if (job.Status == JobStatus.Approved)
+                {
+                    Rectangle addLoad = new Rectangle(x, y, btnWidth, h);
+                    ButtonRenderer.DrawButton(e.Graphics, addLoad, "Add Load", jobsGridView.Font, false, stateAdd);
+                    x += btnWidth + spacing;
+                }
+
+                // View Load button (Always)
+                Rectangle viewLoad = new Rectangle(x, y, btnWidth, h);
                 ButtonRenderer.DrawButton(e.Graphics, viewLoad, "View Load", jobsGridView.Font, false, stateView);
+                x += btnWidth + spacing;
+
+                // Approval button (Submitted only)
+                if (job.Status == JobStatus.Submitted)
+                {
+                    Rectangle approvalBtn = new Rectangle(x, y, btnWidth, h);
+                    ButtonRenderer.DrawButton(e.Graphics, approvalBtn, "Approval", jobsGridView.Font, false, stateApproval);
+                }
 
                 e.Handled = true;
             }
@@ -147,48 +174,50 @@ namespace e_shift_app.views.admin
         {
             if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
             {
+                var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                if (job == null) return;
+
                 var cellRect = jobsGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                int btnWidth = 70, spacing = 10;
+                int x = cellRect.Left + spacing;
+                int y = cellRect.Top + 7;
+                int h = cellRect.Height - 10;
 
-                int deleteBtnWidth = 70;
-                int spacing = 10;
-                int addLoadBtnWidth = 80;
-                int viewLoadBtnWidth = cellRect.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
-
-                Rectangle deleteButton = new Rectangle(cellRect.Left + spacing, cellRect.Top + 7, deleteBtnWidth, cellRect.Height - 10);
-                Rectangle addLoad = new Rectangle(cellRect.Left + deleteBtnWidth + (2 * spacing), cellRect.Top + 7, addLoadBtnWidth, cellRect.Height - 10);
-                Rectangle viewLoad = new Rectangle(cellRect.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), cellRect.Top + 7, viewLoadBtnWidth, cellRect.Height - 10);
+                Rectangle deleteButton = new Rectangle(x, y, btnWidth, h);
+                x += btnWidth + spacing;
+                Rectangle addLoad = new Rectangle(x, y, btnWidth, h);
+                x += btnWidth + spacing;
+                Rectangle viewLoad = new Rectangle(x, y, btnWidth, h);
+                x += btnWidth + spacing;
+                Rectangle approvalBtn = new Rectangle(x, y, btnWidth, h);
 
                 var mouse = jobsGridView.PointToClient(Cursor.Position);
 
-                if (deleteButton.Contains(mouse))
+                // Delete (Submitted only)
+                if (job.Status == JobStatus.Submitted && deleteButton.Contains(mouse))
                 {
-                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                    if (job != null)
+                    var confirm = MessageBox.Show("Delete this job?", "Confirm", MessageBoxButtons.YesNo);
+                    if (confirm == DialogResult.Yes)
                     {
-                        var confirm = MessageBox.Show("Delete this job?", "Confirm", MessageBoxButtons.YesNo);
-                        if (confirm == DialogResult.Yes)
-                        {
-                            _appDbContext.Jobs.Remove(job);
-                            _appDbContext.SaveChanges();
-                            jobBindingList?.Remove(job);
-                        }
+                        _appDbContext.Jobs.Remove(job);
+                        _appDbContext.SaveChanges();
+                        jobBindingList?.Remove(job);
                     }
                 }
-                else if (addLoad.Contains(mouse))
+                // Add Load (Approved only)
+                else if (job.Status == JobStatus.Approved && addLoad.Contains(mouse))
                 {
-                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                    if (job != null)
-                    {
-                        ShowAddLoadDialog(job);
-                    }
+                    ShowAddLoadDialog(job);
                 }
+                // View Load (Always)
                 else if (viewLoad.Contains(mouse))
                 {
-                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                    if (job != null)
-                    {
-                        ShowViewLoadDialog(job.JobId);
-                    }
+                    ShowViewLoadDialog(job.JobId);
+                }
+                // Approval (Submitted only)
+                else if (job.Status == JobStatus.Submitted && approvalBtn.Contains(mouse))
+                {
+                    ShowApprovalPopup(job);
                 }
             }
         }
@@ -351,25 +380,34 @@ namespace e_shift_app.views.admin
             var hit = jobsGridView.HitTest(e.X, e.Y);
             if (hit.Type == DataGridViewHitTestType.Cell && hit.ColumnIndex == jobsGridView.Columns["Actions"].Index && hit.RowIndex >= 0)
             {
-                var cellRect = jobsGridView.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, false);
-                int deleteBtnWidth = 70;
-                int spacing = 10;
-                int addLoadBtnWidth = 80;
-                int viewLoadBtnWidth = cellRect.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
+                var job = jobsGridView.Rows[hit.RowIndex].DataBoundItem as Job;
+                if (job == null) return;
 
-                Rectangle deleteButton = new Rectangle(cellRect.Left + spacing, cellRect.Top + 5, deleteBtnWidth, cellRect.Height - 10);
-                Rectangle addLoad = new Rectangle(cellRect.Left + deleteBtnWidth + (2 * spacing), cellRect.Top + 5, addLoadBtnWidth, cellRect.Height - 10);
-                Rectangle viewLoad = new Rectangle(cellRect.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), cellRect.Top + 5, viewLoadBtnWidth, cellRect.Height - 10);
+                var cellRect = jobsGridView.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, false);
+                int btnWidth = 70, spacing = 10;
+                int x = cellRect.Left + spacing;
+                int y = cellRect.Top + 5;
+                int h = cellRect.Height - 10;
+
+                Rectangle deleteButton = new Rectangle(x, y, btnWidth, h);
+                x += btnWidth + spacing;
+                Rectangle addLoad = new Rectangle(x, y, btnWidth, h);
+                x += btnWidth + spacing;
+                Rectangle viewLoad = new Rectangle(x, y, btnWidth, h);
+                x += btnWidth + spacing;
+                Rectangle approvalBtn = new Rectangle(x, y, btnWidth, h);
 
                 var mouse = new Point(e.X, e.Y);
 
                 int hoveredButton = 0;
-                if (deleteButton.Contains(mouse))
+                if (job.Status == JobStatus.Submitted && deleteButton.Contains(mouse))
                     hoveredButton = 1;
-                else if (addLoad.Contains(mouse))
+                else if (job.Status == JobStatus.Approved && addLoad.Contains(mouse))
                     hoveredButton = 2;
                 else if (viewLoad.Contains(mouse))
                     hoveredButton = 3;
+                else if (job.Status == JobStatus.Submitted && approvalBtn.Contains(mouse))
+                    hoveredButton = 4;
 
                 if (_hoveredRowIndex != hit.RowIndex || _hoveredButton != hoveredButton)
                 {
@@ -400,6 +438,66 @@ namespace e_shift_app.views.admin
                 _hoveredButton = -1;
                 if (prevRow >= 0)
                     jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
+            }
+        }
+
+        private void ShowApprovalPopup(Job job)
+        {
+            using (var form = new Form())
+            {
+                form.Text = "Approval";
+                form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                form.StartPosition = FormStartPosition.CenterParent;
+                form.ClientSize = new Size(350, 200);
+
+                var labelStatus = new Label() { Left = 20, Top = 20, Text = "Status", AutoSize = true };
+                var comboStatus = new ComboBox() { Left = 20, Top = 45, Width = 300, DropDownStyle = ComboBoxStyle.DropDownList };
+                comboStatus.Items.AddRange(new[] { "Approved", "Rejected" });
+                comboStatus.SelectedIndex = 0;
+
+                var labelTU = new Label() { Left = 20, Top = 80, Text = "Transport Unit", AutoSize = true, Visible = true };
+                var comboTU = new ComboBox() { Left = 20, Top = 105, Width = 300, DropDownStyle = ComboBoxStyle.DropDownList, Visible = true };
+
+                // Load available transport units
+                var availableTUs = _appDbContext.TransportUnits.Where(tu => (int)tu.Status == 0).ToList();
+                comboTU.DataSource = availableTUs;
+                comboTU.DisplayMember = "Id"; // Or any other display property
+                comboTU.ValueMember = "Id";
+
+                comboStatus.SelectedIndexChanged += (s, e) =>
+                {
+                    bool isApproved = comboStatus.SelectedItem?.ToString() == "Approved";
+                    labelTU.Visible = comboTU.Visible = isApproved;
+                };
+
+                var buttonOk = new Button() { Text = "Submit", Left = 120, Width = 100, Top = 150, DialogResult = DialogResult.OK };
+                form.Controls.Add(labelStatus);
+                form.Controls.Add(comboStatus);
+                form.Controls.Add(labelTU);
+                form.Controls.Add(comboTU);
+                form.Controls.Add(buttonOk);
+                form.AcceptButton = buttonOk;
+
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (comboStatus.SelectedItem?.ToString() == "Rejected")
+                    {
+                        job.Status = JobStatus.Rejected;
+                    }
+                    else if (comboStatus.SelectedItem?.ToString() == "Approved")
+                    {
+                        job.Status = JobStatus.Approved;
+                        // Assign selected TransportUnit if needed
+                        if (comboTU.SelectedItem is TransportUnit tu)
+                        {
+                            tu.Status = UnitStatus.Occupied; // Mark as assigned
+                            // Optionally, associate the transport unit with the job or a load
+                            tu.JobId = job.JobId;
+                        }
+                    }
+                    _appDbContext.SaveChanges();
+                    jobsGridView.Refresh();
+                }
             }
         }
 
