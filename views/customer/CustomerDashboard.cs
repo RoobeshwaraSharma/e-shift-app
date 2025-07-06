@@ -313,7 +313,7 @@ namespace e_shift_app.views.customer
                     else
                         col.ReadOnly = true;
 
-                    if(col.Name == "JobId" || col.Name == "TransportUnitId" || col.Name == "Job" || col.Name == "TransportUnit")
+                    if (col.Name == "JobId" || col.Name == "TransportUnitId" || col.Name == "Job" || col.Name == "TransportUnit")
                     {
                         col.Visible = false; // Hide ID columns
                     }
@@ -403,6 +403,11 @@ namespace e_shift_app.views.customer
                 if (prevRow >= 0)
                     jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
             }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadJobs();
         }
     }
 }

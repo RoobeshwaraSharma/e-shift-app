@@ -38,13 +38,14 @@
             EndDate = new DataGridViewTextBoxColumn();
             statusDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             jobBindingSource = new BindingSource(components);
+            btnRefresh = new Button();
             ((System.ComponentModel.ISupportInitialize)jobsGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jobBindingSource).BeginInit();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(1023, 31);
+            button1.Location = new Point(975, 31);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 0;
@@ -122,11 +123,22 @@
             // 
             jobBindingSource.DataSource = typeof(models.Job);
             // 
+            // btnRefresh
+            // 
+            btnRefresh.Location = new Point(1086, 31);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(94, 29);
+            btnRefresh.TabIndex = 2;
+            btnRefresh.Text = "Refresh";
+            btnRefresh.UseVisualStyleBackColor = true;
+            btnRefresh.Click += btnRefresh_Click;
+            // 
             // CustomerDashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1206, 558);
+            Controls.Add(btnRefresh);
             Controls.Add(jobsGridView);
             Controls.Add(button1);
             Name = "CustomerDashboard";
@@ -153,5 +165,6 @@
         private DataGridViewTextBoxColumn StartDate;
         private DataGridViewTextBoxColumn EndDate;
         private DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
+        private Button btnRefresh;
     }
 }
