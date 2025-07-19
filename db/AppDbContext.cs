@@ -40,10 +40,10 @@ namespace e_shift_app.db
                 .WithMany(j => j.Loads)
                 .HasForeignKey(l => l.JobId);
 
-            // Load ↔ TransportUnit (One-to-Many)
-            modelBuilder.Entity<Load>()
+            // TransportUnit ↔ Job (One-to-Many)
+            modelBuilder.Entity<Job>()
                 .HasOne(l => l.TransportUnit)
-                .WithMany(t => t.Loads)
+                .WithMany(t => t.Jobs)
                 .HasForeignKey(l => l.TransportUnitId);
 
             // TransportUnit ↔ Lorry, Driver, Assistant, Container (One-to-One)

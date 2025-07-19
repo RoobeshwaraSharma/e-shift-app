@@ -21,7 +21,6 @@ namespace e_shift_app.models
         public int AssistantId { get; set; } // Foreign Key
         public int ContainerId { get; set; } // Foreign Key
         public UnitStatus Status { get; set; } = UnitStatus.Available; // Default value
-        public int? JobId { get; set; } // Foreign Key, nullable if not assigned to a job
 
 
         // Navigation properties
@@ -30,6 +29,6 @@ namespace e_shift_app.models
         public Assistant? Assistant { get; set; }
         public Container? Container { get; set; }
 
-        public ICollection<Load>? Loads { get; set; }
+        public ICollection<Job>? Jobs { get; set; }
     }
 }

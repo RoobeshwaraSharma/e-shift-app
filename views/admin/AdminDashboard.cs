@@ -483,7 +483,6 @@ namespace e_shift_app.views.admin
                         {
                             tu.Status = UnitStatus.Occupied; // Mark as assigned
                             // Optionally, associate the transport unit with the job or a load
-                            tu.JobId = job.JobId;
                         }
                     }
                     _appDbContext.SaveChanges();
