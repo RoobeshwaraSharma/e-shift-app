@@ -80,6 +80,7 @@ namespace e_shift_app
             txtEmail.Clear();
             txtUsername.Clear();
             txtUserPassword.Clear();
+            txtConfirmPassword.Clear();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

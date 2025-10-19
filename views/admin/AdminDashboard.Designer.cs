@@ -49,6 +49,7 @@
             btnLorry = new Button();
             btnTransportUnit = new Button();
             pictureBox1 = new PictureBox();
+            btnDownload = new Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)jobsGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jobBindingSource).BeginInit();
@@ -97,9 +98,11 @@
             jobsGridView.GridColor = SystemColors.GradientActiveCaption;
             jobsGridView.Location = new Point(25, 176);
             jobsGridView.Name = "jobsGridView";
+            jobsGridView.ReadOnly = true;
             jobsGridView.RowHeadersWidth = 51;
             jobsGridView.Size = new Size(1197, 438);
             jobsGridView.TabIndex = 3;
+            jobsGridView.CellContentClick += jobsGridView_CellContentClick;
             // 
             // jobIdDataGridViewTextBoxColumn
             // 
@@ -129,6 +132,7 @@
             startLocationDataGridViewTextBoxColumn.HeaderText = "Start Location";
             startLocationDataGridViewTextBoxColumn.MinimumWidth = 6;
             startLocationDataGridViewTextBoxColumn.Name = "startLocationDataGridViewTextBoxColumn";
+            startLocationDataGridViewTextBoxColumn.ReadOnly = true;
             startLocationDataGridViewTextBoxColumn.Width = 125;
             // 
             // endLocationDataGridViewTextBoxColumn
@@ -137,6 +141,7 @@
             endLocationDataGridViewTextBoxColumn.HeaderText = "End Location";
             endLocationDataGridViewTextBoxColumn.MinimumWidth = 6;
             endLocationDataGridViewTextBoxColumn.Name = "endLocationDataGridViewTextBoxColumn";
+            endLocationDataGridViewTextBoxColumn.ReadOnly = true;
             endLocationDataGridViewTextBoxColumn.Width = 125;
             // 
             // startDateDataGridViewTextBoxColumn
@@ -145,6 +150,7 @@
             startDateDataGridViewTextBoxColumn.HeaderText = "Start Date";
             startDateDataGridViewTextBoxColumn.MinimumWidth = 6;
             startDateDataGridViewTextBoxColumn.Name = "startDateDataGridViewTextBoxColumn";
+            startDateDataGridViewTextBoxColumn.ReadOnly = true;
             startDateDataGridViewTextBoxColumn.Width = 125;
             // 
             // endDateDataGridViewTextBoxColumn
@@ -153,6 +159,7 @@
             endDateDataGridViewTextBoxColumn.HeaderText = "End Date";
             endDateDataGridViewTextBoxColumn.MinimumWidth = 6;
             endDateDataGridViewTextBoxColumn.Name = "endDateDataGridViewTextBoxColumn";
+            endDateDataGridViewTextBoxColumn.ReadOnly = true;
             endDateDataGridViewTextBoxColumn.Width = 125;
             // 
             // statusDataGridViewTextBoxColumn
@@ -161,6 +168,7 @@
             statusDataGridViewTextBoxColumn.HeaderText = "Status";
             statusDataGridViewTextBoxColumn.MinimumWidth = 6;
             statusDataGridViewTextBoxColumn.Name = "statusDataGridViewTextBoxColumn";
+            statusDataGridViewTextBoxColumn.ReadOnly = true;
             statusDataGridViewTextBoxColumn.Width = 125;
             // 
             // jobBindingSource
@@ -242,12 +250,23 @@
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
             // 
+            // btnDownload
+            // 
+            btnDownload.Location = new Point(1096, 629);
+            btnDownload.Name = "btnDownload";
+            btnDownload.Size = new Size(126, 29);
+            btnDownload.TabIndex = 6;
+            btnDownload.Text = "Download CSV";
+            btnDownload.UseVisualStyleBackColor = true;
+            btnDownload.Click += btnDownload_Click;
+            // 
             // AdminDashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
             ClientSize = new Size(1266, 670);
+            Controls.Add(btnDownload);
             Controls.Add(pictureBox1);
             Controls.Add(groupBox2);
             Controls.Add(jobsGridView);
@@ -284,5 +303,6 @@
         private DataGridViewTextBoxColumn endDateDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
         private PictureBox pictureBox1;
+        private Button btnDownload;
     }
 }

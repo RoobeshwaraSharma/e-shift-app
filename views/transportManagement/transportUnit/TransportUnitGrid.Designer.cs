@@ -44,6 +44,7 @@
             transportUnitBindingSource = new BindingSource(components);
             btnAddTransportUnit = new Button();
             pictureBox1 = new PictureBox();
+            btnDownload = new Button();
             ((System.ComponentModel.ISupportInitialize)transportUnitGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)transportUnitBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -167,12 +168,23 @@
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
             // 
+            // btnDownload
+            // 
+            btnDownload.Location = new Point(1164, 546);
+            btnDownload.Name = "btnDownload";
+            btnDownload.Size = new Size(121, 29);
+            btnDownload.TabIndex = 3;
+            btnDownload.Text = "Download CSV";
+            btnDownload.UseVisualStyleBackColor = true;
+            btnDownload.Click += btnDownload_Click;
+            // 
             // TransportUnitGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
-            ClientSize = new Size(1301, 551);
+            ClientSize = new Size(1301, 587);
+            Controls.Add(btnDownload);
             Controls.Add(pictureBox1);
             Controls.Add(btnAddTransportUnit);
             Controls.Add(transportUnitGridView);
@@ -201,5 +213,6 @@
         private DataGridViewTextBoxColumn containerIdDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn ContainerCapacity;
         private PictureBox pictureBox1;
+        private Button btnDownload;
     }
 }

@@ -183,7 +183,7 @@ namespace e_shift_app.views.transportManagement.driver
                 form.Text = "Add Driver";
                 form.FormBorderStyle = FormBorderStyle.FixedDialog;
                 form.StartPosition = FormStartPosition.CenterParent;
-                form.ClientSize = new Size(320, 180);
+                form.ClientSize = new Size(320, 240);
                 form.MaximizeBox = false;
                 form.MinimizeBox = false;
 
@@ -193,14 +193,16 @@ namespace e_shift_app.views.transportManagement.driver
                 var labelLicense = new Label() { Left = 20, Top = 80, Text = "License Number", AutoSize = true };
                 var textBoxLicense = new TextBox() { Left = 20, Top = 105, Width = 250 };
 
-                var labelPhoneNumber = new Label() { Left = 20, Top = 80, Text = "Phone Number", AutoSize = true };
-                var textBoxPhone = new TextBox() { Left = 20, Top = 105, Width = 250 };
+                var labelPhoneNumber = new Label() { Left = 20, Top = 140, Text = "Phone Number", AutoSize = true };
+                var textBoxPhone = new TextBox() { Left = 20, Top = 165, Width = 250 };
 
-                var buttonOk = new Button() { Text = "Submit", Left = 110, Width = 80, Top = 140, DialogResult = DialogResult.OK };
+                var buttonOk = new Button() { Text = "Submit", Left = 110, Width = 80, Top = 200, DialogResult = DialogResult.OK };
                 form.Controls.Add(labelName);
                 form.Controls.Add(textBoxName);
                 form.Controls.Add(labelLicense);
                 form.Controls.Add(textBoxLicense);
+                form.Controls.Add(labelPhoneNumber);
+                form.Controls.Add(textBoxPhone);
                 form.Controls.Add(buttonOk);
                 form.AcceptButton = buttonOk;
 

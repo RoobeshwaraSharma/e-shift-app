@@ -6,16 +6,20 @@ using e_shift_app.views.transportManagement.container;
 using e_shift_app.views.transportManagement.driver;
 using e_shift_app.views.transportManagement.lorry;
 using e_shift_app.views.transportManagement.transportUnit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Data;
+using System.Text;
+using System.IO;
+using System.Linq;
 
 namespace e_shift_app.views.admin
 {
     public partial class AdminDashboard : Form
     {
         private int _hoveredRowIndex = -1;
-        private int _hoveredButton = -1; // 0 = none, 1 = delete, 2 = add load, 3 = view load, 4 = approval
+        private int _hoveredButton = -1; // 0 = none, 1 = delete, 2 = add load, 3 = view load, 4 = approval, 5 = update status
 
         private readonly IServiceProvider _provider;
         private readonly AppDbContext _appDbContext;
@@ -30,220 +34,507 @@ namespace e_shift_app.views.admin
 
         private void btnAdmins_Click(object sender, EventArgs e)
         {
-            // Resolve & show the admin grid form from DI
-            var adminGrid = _provider.GetRequiredService<AdminGrid>();
-            adminGrid.Show();
+            try
+            {
+                // Resolve & show the admin grid form from DI
+                var adminGrid = _provider.GetRequiredService<AdminGrid>();
+                adminGrid.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnCustomers_Click(object sender, EventArgs e)
         {
-            var customerGrid = _provider.GetRequiredService<CustomerGridView>();
-            customerGrid.Show();
+            try
+            {
+                var customerGrid = _provider.GetRequiredService<CustomerGridView>();
+                customerGrid.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnTransportUnit_Click(object sender, EventArgs e)
         {
-            var transportUnit = _provider.GetRequiredService<TransportUnitGrid>();
-            transportUnit.Show();
+            try
+            {
+                var transportUnit = _provider.GetRequiredService<TransportUnitGrid>();
+                transportUnit.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AdminDashboard_Load(object sender, EventArgs e)
         {
-            jobsGridView.AllowUserToAddRows = false;
-            jobsGridView.AllowUserToDeleteRows = false;
-            jobsGridView.ReadOnly = false;
-            jobsGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
-            jobsGridView.DefaultCellStyle.SelectionBackColor = jobsGridView.DefaultCellStyle.BackColor;
-            jobsGridView.DefaultCellStyle.SelectionForeColor = jobsGridView.DefaultCellStyle.ForeColor;
-            jobsGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = jobsGridView.ColumnHeadersDefaultCellStyle.BackColor;
-            jobsGridView.ColumnHeadersDefaultCellStyle.SelectionForeColor = jobsGridView.ColumnHeadersDefaultCellStyle.ForeColor;
-
-            LoadJobs();
-
-            // Add Delete button column if not added
-
-            if (!jobsGridView.Columns.Contains("Actions"))
+            try
             {
-                var actionsCol = new DataGridViewTextBoxColumn
+                jobsGridView.AllowUserToAddRows = false;
+                jobsGridView.AllowUserToDeleteRows = false;
+                // disable cell editing
+                jobsGridView.ReadOnly = true;
+                jobsGridView.DefaultCellStyle.SelectionBackColor = jobsGridView.DefaultCellStyle.BackColor;
+                jobsGridView.DefaultCellStyle.SelectionForeColor = jobsGridView.DefaultCellStyle.ForeColor;
+                jobsGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = jobsGridView.ColumnHeadersDefaultCellStyle.BackColor;
+                jobsGridView.ColumnHeadersDefaultCellStyle.SelectionForeColor = jobsGridView.ColumnHeadersDefaultCellStyle.ForeColor;
+
+                LoadJobs();
+
+                // Add Actions column if not added
+
+                if (!jobsGridView.Columns.Contains("Actions"))
                 {
-                    Name = "Actions",
-                    HeaderText = "Actions",
-                    ReadOnly = true
-                };
-                jobsGridView.Columns.Add(actionsCol);
-                jobsGridView.Columns["Actions"].Width = 400;
-            }
-            else
-            {
-                jobsGridView.Columns["Actions"].Width = 400;
-            }
+                    var actionsCol = new DataGridViewTextBoxColumn
+                    {
+                        Name = "Actions",
+                        HeaderText = "Actions",
+                        ReadOnly = true
+                    };
+                    jobsGridView.Columns.Add(actionsCol);
+                    jobsGridView.Columns["Actions"].Width = 400;
+                }
+                else
+                {
+                    jobsGridView.Columns["Actions"].Width = 400;
+                }
 
-            jobsGridView.CellPainting += jobsGridView_CellPainting;
-            jobsGridView.CellClick += jobsGridView_CellClick;
-            jobsGridView.CellEndEdit += jobsGridView_CellEndEdit;
-            jobsGridView.CellDoubleClick += jobsGridView_CellDoubleClick;
-            jobsGridView.MouseMove += jobsGridView_MouseMove;
-            jobsGridView.MouseLeave += jobsGridView_MouseLeave;
+                jobsGridView.CellPainting += jobsGridView_CellPainting;
+                jobsGridView.CellClick += jobsGridView_CellClick;
+                // removed CellEndEdit and CellDoubleClick handlers - editing disabled
+                jobsGridView.MouseMove += jobsGridView_MouseMove;
+                jobsGridView.MouseLeave += jobsGridView_MouseLeave;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing Admin dashboard: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void LoadJobs()
         {
-            var jobList = _appDbContext.Jobs.ToList();
-            jobBindingList = new BindingList<Job>(jobList);
-            jobsGridView.DataSource = jobBindingList;
-        }
-        private void jobsGridView_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            try
             {
-                jobsGridView.CurrentCell = jobsGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                jobsGridView.BeginEdit(true);
+                var jobList = _appDbContext.Jobs.ToList();
+                jobBindingList = new BindingList<Job>(jobList);
+                jobsGridView.DataSource = jobBindingList;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading jobs: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void jobsGridView_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
 
-            var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-            if (job != null)
-            {
-                _appDbContext.Jobs.Update(job);
-                _appDbContext.SaveChanges();
-            }
-        }
+        // removed editing-related methods
 
         // Helper to get all button rectangles for a given cell
         private List<(string Name, Rectangle Rect)> GetActionButtonRects(Rectangle cellBounds, Job job)
         {
-            int btnWidth = 80, spacing = 10;
+            int spacing = 10;
             int x = cellBounds.Left + spacing;
             int y = cellBounds.Top + 5;
-            int h = cellBounds.Height - 10;
+            int h = cellBounds.Height - 5;
             var rects = new List<(string, Rectangle)>();
 
+            // Delete (Submitted only)
             if (job.Status == JobStatus.Submitted)
             {
-                rects.Add(("Delete", new Rectangle(x, y, btnWidth, h)));
-                x += btnWidth + spacing;
-     
+                int w = 70;
+                rects.Add(("Delete", new Rectangle(x, y, w, h)));
+                x += w + spacing;
             }
 
-            rects.Add(("ViewLoad", new Rectangle(x, y, btnWidth, h)));
-            x += btnWidth + spacing;
-            rects.Add(("AddLoad", new Rectangle(x, y, btnWidth, h)));
-            x += btnWidth + spacing;
+            // View Load (always)
+            {
+                int w = 80;
+                rects.Add(("ViewLoad", new Rectangle(x, y, w, h)));
+                x += w + spacing;
+            }
 
+            // Add Load (only when Approved)
+            if (job.Status == JobStatus.Approved || job.Status == JobStatus.Submitted)
+            {
+                int w = 90;
+                rects.Add(("AddLoad", new Rectangle(x, y, w, h)));
+                x += w + spacing;
+            }
+
+            // Update Status (show for Approved and Inprogress) - wider to fit text
+            if (job.Status == JobStatus.Approved || job.Status == JobStatus.Inprogress)
+            {
+                int w = 120; // wider for "Update Status"
+                rects.Add(("UpdateStatus", new Rectangle(x, y, w, h)));
+                x += w + spacing;
+            }
+
+            // Approval (Submitted only)
             if (job.Status == JobStatus.Submitted)
             {
-                rects.Add(("Approval", new Rectangle(x, y, btnWidth + 20, h+3)));
+                int w = 80;
+                rects.Add(("Approval", new Rectangle(x, y, w, h)));
             }
             return rects;
         }
 
         private void jobsGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
+            try
             {
-                e.Paint(e.CellBounds, DataGridViewPaintParts.All);
-
-                var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                if (job == null) return;
-
-                var rects = GetActionButtonRects(e.CellBounds, job);
-
-                for (int i = 0; i < rects.Count; i++)
+                if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
                 {
-                    var (name, rect) = rects[i];
-                    var state = (_hoveredRowIndex == e.RowIndex && _hoveredButton == i + 1)
-                        ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
-                        : System.Windows.Forms.VisualStyles.PushButtonState.Default;
-                    string text = name switch
-                    {
-                        "Delete" => "Delete",
-                        "AddLoad" => "Add Load",
-                        "ViewLoad" => "View Load",
-                        "Approval" => "Approval",
-                        _ => name
-                    };
-                    ButtonRenderer.DrawButton(e.Graphics, rect, text, jobsGridView.Font, false, state);
-                }
+                    e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
-                e.Handled = true;
+                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                    if (job == null) return;
+
+                    var rects = GetActionButtonRects(e.CellBounds, job);
+
+                    for (int i = 0; i < rects.Count; i++)
+                    {
+                        var (name, rect) = rects[i];
+                        var state = (_hoveredRowIndex == e.RowIndex && _hoveredButton == i + 1)
+                            ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
+                            : System.Windows.Forms.VisualStyles.PushButtonState.Default;
+                        string text = name switch
+                        {
+                            "Delete" => "Delete",
+                            "AddLoad" => "Add Load",
+                            "ViewLoad" => "View Load",
+                            "Approval" => "Approval",
+                            "UpdateStatus" => "Update Status",
+                            _ => name
+                        };
+                        ButtonRenderer.DrawButton(e.Graphics, rect, text, jobsGridView.Font, false, state);
+                    }
+
+                    e.Handled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error rendering actions column: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void jobsGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
+            try
             {
-                var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                if (job == null) return;
-
-                var cellRect = jobsGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
-                var rects = GetActionButtonRects(cellRect, job);
-                var mouse = jobsGridView.PointToClient(Cursor.Position);
-
-                for (int i = 0; i < rects.Count; i++)
+                if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
                 {
-                    var (name, rect) = rects[i];
-                    if (rect.Contains(mouse))
+                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                    if (job == null) return;
+
+                    var cellRect = jobsGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                    var rects = GetActionButtonRects(cellRect, job);
+                    var mouse = jobsGridView.PointToClient(Cursor.Position);
+
+                    for (int i = 0; i < rects.Count; i++)
                     {
-                        switch (name)
+                        var (name, rect) = rects[i];
+                        if (rect.Contains(mouse))
                         {
-                            case "Delete":
-                                var confirm = MessageBox.Show("Delete this job?", "Confirm", MessageBoxButtons.YesNo);
-                                if (confirm == DialogResult.Yes)
-                                {
-                                    _appDbContext.Jobs.Remove(job);
-                                    _appDbContext.SaveChanges();
-                                    jobBindingList?.Remove(job);
-                                }
-                                break;
-                            case "AddLoad":
-                                ShowAddLoadDialog(job);
-                                break;
-                            case "ViewLoad":
-                                ShowViewLoadDialog(job.JobId);
-                                break;
-                            case "Approval":
-                                ShowApprovalPopup(job);
-                                break;
+                            switch (name)
+                            {
+                                case "Delete":
+                                    var confirm = MessageBox.Show("Delete this job?", "Confirm", MessageBoxButtons.YesNo);
+                                    if (confirm == DialogResult.Yes)
+                                    {
+                                        _appDbContext.Jobs.Remove(job);
+                                        _appDbContext.SaveChanges();
+                                        jobBindingList?.Remove(job);
+                                    }
+                                    break;
+                                case "AddLoad":
+                                    ShowAddLoadDialog(job);
+                                    break;
+                                case "ViewLoad":
+                                    ShowViewLoadDialog(job.JobId);
+                                    break;
+                                case "Approval":
+                                    ShowApprovalPopup(job);
+                                    break;
+                                case "UpdateStatus":
+                                    ShowUpdateStatusPopup(job);
+                                    break;
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error handling action click: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ShowUpdateStatusPopup(Job job)
+        {
+            try
+            {
+                using (var form = new Form())
+                {
+                    form.Text = "Update Job Status";
+                    form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    form.ClientSize = new Size(360, 220);
+
+                    var labelStatus = new Label() { Left = 20, Top = 20, Text = "Status", AutoSize = true };
+                    var comboStatus = new ComboBox() { Left = 20, Top = 45, Width = 300, DropDownStyle = ComboBoxStyle.DropDownList };
+
+                    // If current is Approved show Inprogress/Completed, if Inprogress show Completed only
+                    if (job.Status == JobStatus.Approved)
+                    {
+                        comboStatus.Items.AddRange(new[] { "Inprogress", "Completed" });
+                        comboStatus.SelectedIndex = 0; // default to Inprogress
+                    }
+                    else if (job.Status == JobStatus.Inprogress)
+                    {
+                        comboStatus.Items.AddRange(new[] { "Completed" });
+                        comboStatus.SelectedIndex = 0;
+                    }
+
+                    var buttonOk = new Button() { Text = "Submit", Left = 130, Width = 100, Top = 120, DialogResult = DialogResult.OK };
+                    form.Controls.Add(labelStatus);
+                    form.Controls.Add(comboStatus);
+                    form.Controls.Add(buttonOk);
+                    form.AcceptButton = buttonOk;
+
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var selected = comboStatus.SelectedItem?.ToString();
+                        if (selected == "Inprogress")
+                        {
+                            job.Status = JobStatus.Inprogress;
+                            _appDbContext.Jobs.Update(job);
+                            _appDbContext.SaveChanges();
+                        }
+                        else if (selected == "Completed")
+                        {
+                            job.Status = JobStatus.Completed;
+
+                            // If transport unit assigned, mark transport resources as Available
+                            if (job.TransportUnitId.HasValue)
+                            {
+                                var tu = _appDbContext.TransportUnits
+                                    .Include(t => t.Lorry)
+                                    .Include(t => t.Driver)
+                                    .Include(t => t.Assistant)
+                                    .Include(t => t.Container)
+                                    .FirstOrDefault(t => t.Id == job.TransportUnitId.Value);
+
+                                if (tu != null)
+                                {
+                                    // Set TU and related entities to Available
+                                    tu.Status = UnitStatus.Available;
+                                    if (tu.Lorry != null) tu.Lorry.Status = LorryStatus.Available;
+                                    if (tu.Driver != null) tu.Driver.Status = DriverStatus.Available;
+                                    if (tu.Assistant != null) tu.Assistant.Status = AssistantStatus.Available;
+                                    if (tu.Container != null) tu.Container.Status = CotainerStatus.Available;
+
+                                    _appDbContext.TransportUnits.Update(tu);
+                                }
+                            }
+
+                            _appDbContext.Jobs.Update(job);
+                            _appDbContext.SaveChanges();
+                        }
+
+                        // After status change refresh grid
+                        jobsGridView.Refresh();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating job status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnLorry_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var lorryGrid = _provider.GetRequiredService<LorryGrid>();
+                lorryGrid.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening lorry grid: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnContainer_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var container = _provider.GetRequiredService<ContainerGrid>();
+                container.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening container grid: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnDriver_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var driver = _provider.GetRequiredService<DriverGrid>();
+                driver.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening driver grid: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnAssistant_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var assistant = _provider.GetRequiredService<AssistantGrid>();
+                assistant.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening assistant grid: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnDownload_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (jobsGridView.Columns.Count == 0 || jobsGridView.Rows.Count == 0)
+                {
+                    MessageBox.Show("No data available to export.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                using var sfd = new SaveFileDialog()
+                {
+                    Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
+                    FileName = $"jobs_{DateTime.Now:yyyyMMdd_HHmmss}.csv",
+                    Title = "Export Jobs to CSV"
+                };
+
+                if (sfd.ShowDialog(this) != DialogResult.OK) return;
+
+                var sb = new StringBuilder();
+
+                // Header: use visible columns in display order, excluding the Actions column
+                var visibleColumns = jobsGridView.Columns.Cast<DataGridViewColumn>()
+                    .Where(c => c.Visible && !string.Equals(c.Name, "Actions", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(c => c.DisplayIndex)
+                    .ToList();
+
+                sb.AppendLine(string.Join(",", visibleColumns.Select(c => EscapeForCsv(string.IsNullOrWhiteSpace(c.HeaderText) ? c.Name : c.HeaderText))));
+
+                // Rows
+                foreach (DataGridViewRow row in jobsGridView.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    var values = new List<string>();
+                    foreach (var col in visibleColumns)
+                    {
+                        var cell = row.Cells[col.Index];
+                        var val = cell?.Value;
+                        if (val == null)
+                        {
+                            values.Add("");
+                            continue;
+                        }
+
+                        string text;
+                        if (val is DateTime dt)
+                            text = dt.ToString("o"); // ISO
+                        else
+                            text = val.ToString() ?? string.Empty;
+
+                        values.Add(EscapeForCsv(text));
+                    }
+
+                    sb.AppendLine(string.Join(",", values));
+                }
+
+                File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
+                MessageBox.Show($"Export completed: {sfd.FileName}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error exporting CSV: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static string EscapeForCsv(string input)
+        {
+            if (input == null) return string.Empty;
+            var needsQuotes = input.Contains(',') || input.Contains('"') || input.Contains('\n') || input.Contains('\r');
+            var escaped = input.Replace("\"", "\"\"");
+            return needsQuotes ? $"\"{escaped}\"" : escaped;
         }
 
         private void jobsGridView_MouseMove(object sender, MouseEventArgs e)
         {
-            var hit = jobsGridView.HitTest(e.X, e.Y);
-            if (hit.Type == DataGridViewHitTestType.Cell && hit.ColumnIndex == jobsGridView.Columns["Actions"].Index && hit.RowIndex >= 0)
+            try
             {
-                var job = jobsGridView.Rows[hit.RowIndex].DataBoundItem as Job;
-                if (job == null) return;
-
-                var cellRect = jobsGridView.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, false);
-                var rects = GetActionButtonRects(cellRect, job);
-                var mouse = new Point(e.X, e.Y);
-
-                int hoveredButton = 0;
-                for (int i = 0; i < rects.Count; i++)
+                var hit = jobsGridView.HitTest(e.X, e.Y);
+                if (hit.Type == DataGridViewHitTestType.Cell && hit.ColumnIndex == jobsGridView.Columns["Actions"].Index && hit.RowIndex >= 0)
                 {
-                    if (rects[i].Rect.Contains(mouse))
+                    var job = jobsGridView.Rows[hit.RowIndex].DataBoundItem as Job;
+                    if (job == null) return;
+
+                    var cellRect = jobsGridView.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, false);
+                    var rects = GetActionButtonRects(cellRect, job);
+                    var mouse = new Point(e.X, e.Y);
+
+                    int hoveredButton = 0;
+                    for (int i = 0; i < rects.Count; i++)
                     {
-                        hoveredButton = i + 1;
-                        break;
+                        if (rects[i].Rect.Contains(mouse))
+                        {
+                            hoveredButton = i + 1;
+                            break;
+                        }
+                    }
+
+                    if (_hoveredRowIndex != hit.RowIndex || _hoveredButton != hoveredButton)
+                    {
+                        _hoveredRowIndex = hit.RowIndex;
+                        _hoveredButton = hoveredButton;
+                        jobsGridView.InvalidateCell(hit.ColumnIndex, hit.RowIndex);
                     }
                 }
-
-                if (_hoveredRowIndex != hit.RowIndex || _hoveredButton != hoveredButton)
+                else
                 {
-                    _hoveredRowIndex = hit.RowIndex;
-                    _hoveredButton = hoveredButton;
-                    jobsGridView.InvalidateCell(hit.ColumnIndex, hit.RowIndex);
+                    if (_hoveredRowIndex != -1 || _hoveredButton != -1)
+                    {
+                        int prevRow = _hoveredRowIndex;
+                        _hoveredRowIndex = -1;
+                        _hoveredButton = -1;
+                        if (prevRow >= 0)
+                            jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
+                    }
                 }
             }
-            else
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error handling mouse move: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void jobsGridView_MouseLeave(object sender, EventArgs e)
+        {
+            try
             {
                 if (_hoveredRowIndex != -1 || _hoveredButton != -1)
                 {
@@ -254,265 +545,262 @@ namespace e_shift_app.views.admin
                         jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
                 }
             }
-        }
-
-        private void jobsGridView_MouseLeave(object sender, EventArgs e)
-        {
-            if (_hoveredRowIndex != -1 || _hoveredButton != -1)
+            catch (Exception ex)
             {
-                int prevRow = _hoveredRowIndex;
-                _hoveredRowIndex = -1;
-                _hoveredButton = -1;
-                if (prevRow >= 0)
-                    jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
+                MessageBox.Show($"Error handling mouse leave: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ShowAddLoadDialog(Job job)
         {
-            using (var form = new Form())
+            try
             {
-                form.Text = "Add Load";
-                form.FormBorderStyle = FormBorderStyle.FixedDialog;
-                form.StartPosition = FormStartPosition.CenterParent;
-                form.ClientSize = new Size(340, 220);
-                form.MaximizeBox = false;
-                form.MinimizeBox = false;
-
-                var labelWeight = new Label() { Left = 20, Top = 20, Text = "Weight (kg)", AutoSize = true };
-                var textBoxWeight = new TextBox() { Left = 20, Top = 45, Width = 280 };
-
-                var labelDescription = new Label() { Left = 20, Top = 80, Text = "Description", AutoSize = true };
-                var textBoxDescription = new TextBox() { Left = 20, Top = 105, Width = 280 };
-
-                var buttonOk = new Button() { Text = "Submit", Left = 120, Width = 80, Top = 160, DialogResult = DialogResult.OK };
-                form.Controls.Add(labelWeight);
-                form.Controls.Add(textBoxWeight);
-                form.Controls.Add(labelDescription);
-                form.Controls.Add(textBoxDescription);
-                form.Controls.Add(buttonOk);
-                form.AcceptButton = buttonOk;
-
-                buttonOk.Click += (s, e) =>
+                using (var form = new Form())
                 {
-                    if (string.IsNullOrWhiteSpace(textBoxWeight.Text))
-                    {
-                        MessageBox.Show("Weight is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.DialogResult = DialogResult.None;
-                        return;
-                    }
-                    if (!decimal.TryParse(textBoxWeight.Text, out var weight) || weight <= 0)
-                    {
-                        MessageBox.Show("Weight must be a positive number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.DialogResult = DialogResult.None;
-                        return;
-                    }
-                    if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
-                    {
-                        MessageBox.Show("Description is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.DialogResult = DialogResult.None;
-                        return;
-                    }
-                };
+                    form.Text = "Add Load";
+                    form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    form.ClientSize = new Size(340, 220);
+                    form.MaximizeBox = false;
+                    form.MinimizeBox = false;
 
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    var weight = decimal.Parse(textBoxWeight.Text);
-                    var description = textBoxDescription.Text.Trim();
+                    var labelWeight = new Label() { Left = 20, Top = 20, Text = "Weight (kg)", AutoSize = true };
+                    var textBoxWeight = new TextBox() { Left = 20, Top = 45, Width = 280 };
 
-                    var load = new Load
+                    var labelDescription = new Label() { Left = 20, Top = 80, Text = "Description", AutoSize = true };
+                    var textBoxDescription = new TextBox() { Left = 20, Top = 105, Width = 280 };
+
+                    var buttonOk = new Button() { Text = "Submit", Left = 120, Width = 80, Top = 160, DialogResult = DialogResult.OK };
+                    form.Controls.Add(labelWeight);
+                    form.Controls.Add(textBoxWeight);
+                    form.Controls.Add(labelDescription);
+                    form.Controls.Add(textBoxDescription);
+                    form.Controls.Add(buttonOk);
+                    form.AcceptButton = buttonOk;
+
+                    buttonOk.Click += (s, e) =>
                     {
-                        JobId = job.JobId,
-                        Weight = weight,
-                        Description = description
+                        if (string.IsNullOrWhiteSpace(textBoxWeight.Text))
+                        {
+                            MessageBox.Show("Weight is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            form.DialogResult = DialogResult.None;
+                            return;
+                        }
+                        if (!decimal.TryParse(textBoxWeight.Text, out var weight) || weight <= 0)
+                        {
+                            MessageBox.Show("Weight must be a positive number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            form.DialogResult = DialogResult.None;
+                            return;
+                        }
+                        if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
+                        {
+                            MessageBox.Show("Description is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            form.DialogResult = DialogResult.None;
+                            return;
+                        }
                     };
 
-                    _appDbContext.Loads.Add(load);
-                    _appDbContext.SaveChanges();
-                    MessageBox.Show("Load added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var weight = decimal.Parse(textBoxWeight.Text);
+                        var description = textBoxDescription.Text.Trim();
+
+                        var load = new Load
+                        {
+                            JobId = job.JobId,
+                            Weight = weight,
+                            Description = description
+                        };
+
+                        _appDbContext.Loads.Add(load);
+                        _appDbContext.SaveChanges();
+                        MessageBox.Show("Load added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error adding load: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ShowViewLoadDialog(int jobId)
         {
-            using (var form = new Form())
+            try
             {
-                form.Text = "View Loads";
-                form.FormBorderStyle = FormBorderStyle.FixedDialog;
-                form.StartPosition = FormStartPosition.CenterParent;
-                form.ClientSize = new Size(500, 350);
-                form.MaximizeBox = false;
-                form.MinimizeBox = false;
-
-                var grid = new DataGridView()
+                using (var form = new Form())
                 {
-                    Left = 10,
-                    Top = 10,
-                    Width = 400,
-                    Height = 260,
-                    ReadOnly = false,
-                    AllowUserToAddRows = false,
-                    AllowUserToDeleteRows = false,
-                    SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                    EditMode = DataGridViewEditMode.EditProgrammatically,
-                    AutoGenerateColumns = true
-                };
+                    form.Text = "View Loads";
+                    form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    form.ClientSize = new Size(500, 350);
+                    form.MaximizeBox = false;
+                    form.MinimizeBox = false;
 
-                var btnClose = new Button()
-                {
-                    Text = "Close",
-                    Left = 200,
-                    Top = 285,
-                    Width = 100,
-                    DialogResult = DialogResult.Cancel
-                };
-
-                form.Controls.Add(grid);
-                form.Controls.Add(btnClose);
-                form.AcceptButton = btnClose;
-                form.CancelButton = btnClose;
-
-                // Load data
-                var loads = _appDbContext.Loads.Where(l => l.JobId == jobId).ToList();
-                var bindingList = new BindingList<Load>(loads);
-                grid.DataSource = bindingList;
-
-                // Allow inline edit for Weight and Description only
-                foreach (DataGridViewColumn col in grid.Columns)
-                {
-                    if (col.Name == "Weight" || col.Name == "Description")
-                        col.ReadOnly = false;
-                    else
-                        col.ReadOnly = true;
-
-                    if (col.Name == "JobId" || col.Name == "TransportUnitId" || col.Name == "Job" || col.Name == "TransportUnit")
+                    var grid = new DataGridView()
                     {
-                        col.Visible = false; // Hide ID columns
-                    }
-                    if (col.Name == "LoadId")
+                        Left = 10,
+                        Top = 10,
+                        Width = 400,
+                        Height = 260,
+                        ReadOnly = false,
+                        AllowUserToAddRows = false,
+                        AllowUserToDeleteRows = false,
+                        SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                        EditMode = DataGridViewEditMode.EditProgrammatically,
+                        AutoGenerateColumns = true
+                    };
+
+                    var btnClose = new Button()
                     {
-                        col.HeaderText = "Load ID"; // Rename LoadId column
-                        col.Width = 80; // Set a fixed width for LoadId column
+                        Text = "Close",
+                        Left = 200,
+                        Top = 285,
+                        Width = 100,
+                        DialogResult = DialogResult.Cancel
+                    };
+
+                    form.Controls.Add(grid);
+                    form.Controls.Add(btnClose);
+                    form.AcceptButton = btnClose;
+                    form.CancelButton = btnClose;
+
+                    // Load data
+                    var loads = _appDbContext.Loads.Where(l => l.JobId == jobId).ToList();
+                    var bindingList = new BindingList<Load>(loads);
+                    grid.DataSource = bindingList;
+
+                    // Allow inline edit for Weight and Description only
+                    foreach (DataGridViewColumn col in grid.Columns)
+                    {
+                        if (col.Name == "Weight" || col.Name == "Description")
+                            col.ReadOnly = false;
+                        else
+                            col.ReadOnly = true;
+
+                        if (col.Name == "JobId" || col.Name == "TransportUnitId" || col.Name == "Job" || col.Name == "TransportUnit")
+                        {
+                            col.Visible = false; // Hide ID columns
+                        }
+                        if (col.Name == "LoadId")
+                        {
+                            col.HeaderText = "Load ID"; // Rename LoadId column
+                            col.Width = 80; // Set a fixed width for LoadId column
+                        }
                     }
+
+                    grid.CellDoubleClick += (s, e) =>
+                    {
+                        if (e.RowIndex >= 0 && (grid.Columns[e.ColumnIndex].Name == "Weight" || grid.Columns[e.ColumnIndex].Name == "Description"))
+                        {
+                            grid.CurrentCell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                            grid.BeginEdit(true);
+                        }
+                    };
+
+                    grid.CellEndEdit += (s, e) =>
+                    {
+                        if (e.RowIndex < 0) return;
+                        var load = grid.Rows[e.RowIndex].DataBoundItem as Load;
+                        if (load != null)
+                        {
+                            _appDbContext.Loads.Update(load);
+                            _appDbContext.SaveChanges();
+                        }
+                    };
+
+                    form.ShowDialog(this);
                 }
-
-                grid.CellDoubleClick += (s, e) =>
-                {
-                    if (e.RowIndex >= 0 && (grid.Columns[e.ColumnIndex].Name == "Weight" || grid.Columns[e.ColumnIndex].Name == "Description"))
-                    {
-                        grid.CurrentCell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                        grid.BeginEdit(true);
-                    }
-                };
-
-                grid.CellEndEdit += (s, e) =>
-                {
-                    if (e.RowIndex < 0) return;
-                    var load = grid.Rows[e.RowIndex].DataBoundItem as Load;
-                    if (load != null)
-                    {
-                        _appDbContext.Loads.Update(load);
-                        _appDbContext.SaveChanges();
-                    }
-                };
-
-                form.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error viewing loads: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ShowApprovalPopup(Job job)
         {
-            using (var form = new Form())
+            try
             {
-                form.Text = "Approval";
-                form.FormBorderStyle = FormBorderStyle.FixedDialog;
-                form.StartPosition = FormStartPosition.CenterParent;
-                form.ClientSize = new Size(350, 200);
-
-                var labelStatus = new Label() { Left = 20, Top = 20, Text = "Status", AutoSize = true };
-                var comboStatus = new ComboBox() { Left = 20, Top = 45, Width = 300, DropDownStyle = ComboBoxStyle.DropDownList };
-                comboStatus.Items.AddRange(new[] { "Approved", "Rejected" });
-                comboStatus.SelectedIndex = 0;
-
-                var labelTU = new Label() { Left = 20, Top = 80, Text = "Transport Unit", AutoSize = true, Visible = true };
-                var comboTU = new ComboBox() { Left = 20, Top = 105, Width = 300, DropDownStyle = ComboBoxStyle.DropDownList, Visible = true };
-
-                // Load available transport units
-                var availableTUs = _appDbContext.TransportUnits.Where(tu => (int)tu.Status == 0).ToList();
-                comboTU.DataSource = availableTUs;
-                comboTU.DisplayMember = "Id"; // Or any other display property
-                comboTU.ValueMember = "Id";
-
-                comboStatus.SelectedIndexChanged += (s, e) =>
+                using (var form = new Form())
                 {
-                    bool isApproved = comboStatus.SelectedItem?.ToString() == "Approved";
-                    labelTU.Visible = comboTU.Visible = isApproved;
-                };
+                    form.Text = "Approval";
+                    form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    form.ClientSize = new Size(350, 200);
 
-                var buttonOk = new Button() { Text = "Submit", Left = 120, Width = 100, Top = 150, DialogResult = DialogResult.OK };
-                form.Controls.Add(labelStatus);
-                form.Controls.Add(comboStatus);
-                form.Controls.Add(labelTU);
-                form.Controls.Add(comboTU);
-                form.Controls.Add(buttonOk);
-                form.AcceptButton = buttonOk;
+                    var labelStatus = new Label() { Left = 20, Top = 20, Text = "Status", AutoSize = true };
+                    var comboStatus = new ComboBox() { Left = 20, Top = 45, Width = 300, DropDownStyle = ComboBoxStyle.DropDownList };
+                    comboStatus.Items.AddRange(new[] { "Approved", "Rejected" });
+                    comboStatus.SelectedIndex = 0;
 
-                buttonOk.Click += (s, e) =>
-                {
-                    if (comboStatus.SelectedItem?.ToString() == "Approved" && string.IsNullOrWhiteSpace(comboTU.Text))
-                    {
-                        MessageBox.Show("Transport Unit is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.DialogResult = DialogResult.None;
-                        return;
-                    }
-                  
-                };
+                    var labelTU = new Label() { Left = 20, Top = 80, Text = "Transport Unit", AutoSize = true, Visible = true };
+                    var comboTU = new ComboBox() { Left = 20, Top = 105, Width = 300, DropDownStyle = ComboBoxStyle.DropDownList, Visible = true };
 
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    if (comboStatus.SelectedItem?.ToString() == "Rejected")
+                    // Load available transport units
+                    var availableTUs = _appDbContext.TransportUnits.Where(tu => (int)tu.Status == 0).ToList();
+                    comboTU.DataSource = availableTUs;
+                    comboTU.DisplayMember = "Id"; // Or any other display property
+                    comboTU.ValueMember = "Id";
+
+                    comboStatus.SelectedIndexChanged += (s, e) =>
                     {
-                        job.Status = JobStatus.Rejected;
-                    }
-                    else if (comboStatus.SelectedItem?.ToString() == "Approved")
+                        bool isApproved = comboStatus.SelectedItem?.ToString() == "Approved";
+                        labelTU.Visible = comboTU.Visible = isApproved;
+                    };
+
+                    var buttonOk = new Button() { Text = "Submit", Left = 120, Width = 100, Top = 150, DialogResult = DialogResult.OK };
+                    form.Controls.Add(labelStatus);
+                    form.Controls.Add(comboStatus);
+                    form.Controls.Add(labelTU);
+                    form.Controls.Add(comboTU);
+                    form.Controls.Add(buttonOk);
+                    form.AcceptButton = buttonOk;
+
+                    buttonOk.Click += (s, e) =>
                     {
-                        job.Status = JobStatus.Approved;
-                        // Assign selected TransportUnit if needed
-                        if (comboTU.SelectedItem is TransportUnit tu)
+                        if (comboStatus.SelectedItem?.ToString() == "Approved" && string.IsNullOrWhiteSpace(comboTU.Text))
                         {
-                            tu.Status = UnitStatus.Occupied; // Mark as assigned
-                            // Optionally, associate the transport unit with the job or a load
+                            MessageBox.Show("Transport Unit is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            form.DialogResult = DialogResult.None;
+                            return;
                         }
+
+                    };
+
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        if (comboStatus.SelectedItem?.ToString() == "Rejected")
+                        {
+                            job.Status = JobStatus.Rejected;
+                        }
+                        else if (comboStatus.SelectedItem?.ToString() == "Approved")
+                        {
+                            job.Status = JobStatus.Approved;
+                            // Assign selected TransportUnit if needed
+                            if (comboTU.SelectedItem is TransportUnit tu)
+                            {
+                                tu.Status = UnitStatus.Occupied; // Mark as assigned
+                                // Optionally, associate the transport unit with the job or a load
+                                job.TransportUnitId = tu.Id;
+                                _appDbContext.TransportUnits.Update(tu);
+                            }
+                        }
+                        _appDbContext.Jobs.Update(job);
+                        _appDbContext.SaveChanges();
+                        jobsGridView.Refresh();
                     }
-                    _appDbContext.SaveChanges();
-                    jobsGridView.Refresh();
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error handling approval: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void btnLorry_Click(object sender, EventArgs e)
+        private void jobsGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            var lorryGrid = _provider.GetRequiredService<LorryGrid>();
-            lorryGrid.Show();
-        }
 
-        private void btnContainer_Click(object sender, EventArgs e)
-        {
-            var container = _provider.GetRequiredService<ContainerGrid>();
-            container.Show();
-        }
-
-        private void btnDriver_Click(object sender, EventArgs e)
-        {
-            var driver = _provider.GetRequiredService<DriverGrid>();
-            driver.Show();
-        }
-
-        private void btnAssistant_Click(object sender, EventArgs e)
-        {
-            var assistant = _provider.GetRequiredService<AssistantGrid>();
-            assistant.Show();
         }
     }
 }

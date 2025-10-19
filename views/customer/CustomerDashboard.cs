@@ -33,354 +33,439 @@ namespace e_shift_app.views.customer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var jobForm = _provider.GetRequiredService<JobForm>();
-            jobForm.Show(); // Show the JobForm as a dialog
+            try
+            {
+                var jobForm = _provider.GetRequiredService<JobForm>();
+                jobForm.Show(); // Show the JobForm as a dialog
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening job form: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void CustomerDashboard_Load(object sender, EventArgs e)
         {
-            jobsGridView.AllowUserToAddRows = false;
-            jobsGridView.AllowUserToDeleteRows = false;
-            jobsGridView.ReadOnly = false;
-            jobsGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
-            jobsGridView.DefaultCellStyle.SelectionBackColor = jobsGridView.DefaultCellStyle.BackColor;
-            jobsGridView.DefaultCellStyle.SelectionForeColor = jobsGridView.DefaultCellStyle.ForeColor;
-            jobsGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = jobsGridView.ColumnHeadersDefaultCellStyle.BackColor;
-            jobsGridView.ColumnHeadersDefaultCellStyle.SelectionForeColor = jobsGridView.ColumnHeadersDefaultCellStyle.ForeColor;
-
-            LoadJobs();
-
-            // Add Delete button column if not added
-
-            if (!jobsGridView.Columns.Contains("Actions"))
+            try
             {
-                var actionsCol = new DataGridViewTextBoxColumn
+                jobsGridView.AllowUserToAddRows = false;
+                jobsGridView.AllowUserToDeleteRows = false;
+                jobsGridView.ReadOnly = false;
+                jobsGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+                jobsGridView.DefaultCellStyle.SelectionBackColor = jobsGridView.DefaultCellStyle.BackColor;
+                jobsGridView.DefaultCellStyle.SelectionForeColor = jobsGridView.DefaultCellStyle.ForeColor;
+                jobsGridView.ColumnHeadersDefaultCellStyle.SelectionBackColor = jobsGridView.ColumnHeadersDefaultCellStyle.BackColor;
+                jobsGridView.ColumnHeadersDefaultCellStyle.SelectionForeColor = jobsGridView.ColumnHeadersDefaultCellStyle.ForeColor;
+
+                LoadJobs();
+
+                // Add Delete button column if not added
+
+                if (!jobsGridView.Columns.Contains("Actions"))
                 {
-                    Name = "Actions",
-                    HeaderText = "Actions",
-                    ReadOnly = true
-                };
-                jobsGridView.Columns.Add(actionsCol);
-                jobsGridView.Columns["Actions"].Width = 340;
-            }
-            else
-            {
-                jobsGridView.Columns["Actions"].Width = 340;
-            }
+                    var actionsCol = new DataGridViewTextBoxColumn
+                    {
+                        Name = "Actions",
+                        HeaderText = "Actions",
+                        ReadOnly = true
+                    };
+                    jobsGridView.Columns.Add(actionsCol);
+                    jobsGridView.Columns["Actions"].Width = 340;
+                }
+                else
+                {
+                    jobsGridView.Columns["Actions"].Width = 340;
+                }
 
-            jobsGridView.CellPainting += jobsGridView_CellPainting;
-            jobsGridView.CellClick += jobsGridView_CellClick;
-            jobsGridView.CellEndEdit += jobsGridView_CellEndEdit;
-            jobsGridView.CellDoubleClick += jobsGridView_CellDoubleClick;
-            jobsGridView.MouseMove += jobsGridView_MouseMove;
-            jobsGridView.MouseLeave += jobsGridView_MouseLeave;
+                jobsGridView.CellPainting += jobsGridView_CellPainting;
+                jobsGridView.CellClick += jobsGridView_CellClick;
+                jobsGridView.CellEndEdit += jobsGridView_CellEndEdit;
+                jobsGridView.CellDoubleClick += jobsGridView_CellDoubleClick;
+                jobsGridView.MouseMove += jobsGridView_MouseMove;
+                jobsGridView.MouseLeave += jobsGridView_MouseLeave;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing customer dashboard: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
         private void jobsGridView_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            try
             {
-                jobsGridView.CurrentCell = jobsGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                jobsGridView.BeginEdit(true);
+                if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+                {
+                    jobsGridView.CurrentCell = jobsGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    jobsGridView.BeginEdit(true);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void jobsGridView_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
-
-            var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-            if (job != null)
+            try
             {
-                _appDbContext.Jobs.Update(job);
-                _appDbContext.SaveChanges();
+                if (e.RowIndex < 0) return;
+
+                var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                if (job != null)
+                {
+                    _appDbContext.Jobs.Update(job);
+                    _appDbContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving job edits: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void LoadJobs()
         {
-            var customer = Session.LoggedInUser as Customer;
-            if (customer == null)
+            try
             {
-                MessageBox.Show("No logged in customer found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                var customer = Session.LoggedInUser as Customer;
+                if (customer == null)
+                {
+                    MessageBox.Show("No logged in customer found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                var jobList = _appDbContext.Jobs.AsQueryable()
+                    .Where(j => j.CustomerId == customer.Id)
+                    .OrderByDescending(j => j.StartDate) // Order by StartDate descending
+                    .ToList();
+                jobBindingList = new BindingList<Job>(jobList);
+                jobsGridView.DataSource = jobBindingList;
             }
-            var jobList = _appDbContext.Jobs.AsQueryable()
-                .Where(j => j.CustomerId == customer.Id)
-                .OrderByDescending(j => j.StartDate) // Order by StartDate descending
-                .ToList();
-            jobBindingList = new BindingList<Job>(jobList);
-            jobsGridView.DataSource = jobBindingList;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading jobs: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void jobsGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
+            try
             {
-                e.Paint(e.CellBounds, DataGridViewPaintParts.All);
+                if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
+                {
+                    e.Paint(e.CellBounds, DataGridViewPaintParts.All);
 
-                int deleteBtnWidth = 70;
-                int spacing = 10;
-                int addLoadBtnWidth = 80;
-                int viewLoadBtnWidth = e.CellBounds.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
+                    int deleteBtnWidth = 70;
+                    int spacing = 10;
+                    int addLoadBtnWidth = 80;
+                    int viewLoadBtnWidth = e.CellBounds.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
 
-                Rectangle deleteButton = new Rectangle(e.CellBounds.Left + spacing, e.CellBounds.Top + 5, deleteBtnWidth, e.CellBounds.Height - 8);
-                Rectangle addLoad = new Rectangle(e.CellBounds.Left + deleteBtnWidth + (2 * spacing), e.CellBounds.Top + 5, addLoadBtnWidth, e.CellBounds.Height - 8);
-                Rectangle viewLoad = new Rectangle(e.CellBounds.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), e.CellBounds.Top + 5, viewLoadBtnWidth, e.CellBounds.Height - 8);
+                    Rectangle deleteButton = new Rectangle(e.CellBounds.Left + spacing, e.CellBounds.Top + 5, deleteBtnWidth, e.CellBounds.Height - 8);
+                    Rectangle addLoad = new Rectangle(e.CellBounds.Left + deleteBtnWidth + (2 * spacing), e.CellBounds.Top + 5, addLoadBtnWidth, e.CellBounds.Height - 8);
+                    Rectangle viewLoad = new Rectangle(e.CellBounds.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), e.CellBounds.Top + 5, viewLoadBtnWidth, e.CellBounds.Height - 8);
 
-                var stateDelete = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 1)
-                    ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
-                    : System.Windows.Forms.VisualStyles.PushButtonState.Default;
-                var stateAdd = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 2)
-                    ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
-                    : System.Windows.Forms.VisualStyles.PushButtonState.Default;
-                var stateView = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 3)
-                    ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
-                    : System.Windows.Forms.VisualStyles.PushButtonState.Default;
+                    var stateDelete = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 1)
+                        ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
+                        : System.Windows.Forms.VisualStyles.PushButtonState.Default;
+                    var stateAdd = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 2)
+                        ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
+                        : System.Windows.Forms.VisualStyles.PushButtonState.Default;
+                    var stateView = (_hoveredRowIndex == e.RowIndex && _hoveredButton == 3)
+                        ? System.Windows.Forms.VisualStyles.PushButtonState.Hot
+                        : System.Windows.Forms.VisualStyles.PushButtonState.Default;
 
-                ButtonRenderer.DrawButton(e.Graphics, deleteButton, "Delete", jobsGridView.Font, false, stateDelete);
-                ButtonRenderer.DrawButton(e.Graphics, addLoad, "Add Load", jobsGridView.Font, false, stateAdd);
-                ButtonRenderer.DrawButton(e.Graphics, viewLoad, "View Load", jobsGridView.Font, false, stateView);
+                    ButtonRenderer.DrawButton(e.Graphics, deleteButton, "Delete", jobsGridView.Font, false, stateDelete);
+                    ButtonRenderer.DrawButton(e.Graphics, addLoad, "Add Load", jobsGridView.Font, false, stateAdd);
+                    ButtonRenderer.DrawButton(e.Graphics, viewLoad, "View Load", jobsGridView.Font, false, stateView);
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error rendering action buttons: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void jobsGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
+            try
             {
-                var cellRect = jobsGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
-
-                int deleteBtnWidth = 70;
-                int spacing = 10;
-                int addLoadBtnWidth = 80;
-                int viewLoadBtnWidth = cellRect.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
-
-                Rectangle deleteButton = new Rectangle(cellRect.Left + spacing, cellRect.Top + 7, deleteBtnWidth, cellRect.Height - 10);
-                Rectangle addLoad = new Rectangle(cellRect.Left + deleteBtnWidth + (2 * spacing), cellRect.Top + 7, addLoadBtnWidth, cellRect.Height - 10);
-                Rectangle viewLoad = new Rectangle(cellRect.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), cellRect.Top + 7, viewLoadBtnWidth, cellRect.Height - 10);
-
-                var mouse = jobsGridView.PointToClient(Cursor.Position);
-
-                if (deleteButton.Contains(mouse))
+                if (e.ColumnIndex == jobsGridView.Columns["Actions"].Index && e.RowIndex >= 0)
                 {
-                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                    if (job != null)
+                    var cellRect = jobsGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+
+                    int deleteBtnWidth = 70;
+                    int spacing = 10;
+                    int addLoadBtnWidth = 80;
+                    int viewLoadBtnWidth = cellRect.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
+
+                    Rectangle deleteButton = new Rectangle(cellRect.Left + spacing, cellRect.Top + 7, deleteBtnWidth, cellRect.Height - 10);
+                    Rectangle addLoad = new Rectangle(cellRect.Left + deleteBtnWidth + (2 * spacing), cellRect.Top + 7, addLoadBtnWidth, cellRect.Height - 10);
+                    Rectangle viewLoad = new Rectangle(cellRect.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), cellRect.Top + 7, viewLoadBtnWidth, cellRect.Height - 10);
+
+                    var mouse = jobsGridView.PointToClient(Cursor.Position);
+
+                    if (deleteButton.Contains(mouse))
                     {
-                        var confirm = MessageBox.Show("Delete this job?", "Confirm", MessageBoxButtons.YesNo);
-                        if (confirm == DialogResult.Yes)
+                        var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                        if (job != null)
                         {
-                            _appDbContext.Jobs.Remove(job);
-                            _appDbContext.SaveChanges();
-                            jobBindingList?.Remove(job);
+                            var confirm = MessageBox.Show("Delete this job?", "Confirm", MessageBoxButtons.YesNo);
+                            if (confirm == DialogResult.Yes)
+                            {
+                                _appDbContext.Jobs.Remove(job);
+                                _appDbContext.SaveChanges();
+                                jobBindingList?.Remove(job);
+                            }
+                        }
+                    }
+                    else if (addLoad.Contains(mouse))
+                    {
+                        var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                        if (job != null)
+                        {
+                            ShowAddLoadDialog(job);
+                        }
+                    }
+                    else if (viewLoad.Contains(mouse))
+                    {
+                        var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
+                        if (job != null)
+                        {
+                            ShowViewLoadDialog(job.JobId);
                         }
                     }
                 }
-                else if (addLoad.Contains(mouse))
-                {
-                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                    if (job != null)
-                    {
-                        ShowAddLoadDialog(job);
-                    }
-                }
-                else if (viewLoad.Contains(mouse))
-                {
-                    var job = jobsGridView.Rows[e.RowIndex].DataBoundItem as Job;
-                    if (job != null)
-                    {
-                        ShowViewLoadDialog(job.JobId);
-                    }
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error handling action click: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ShowAddLoadDialog(Job job)
         {
-            using (var form = new Form())
+            try
             {
-                form.Text = "Add Load";
-                form.FormBorderStyle = FormBorderStyle.FixedDialog;
-                form.StartPosition = FormStartPosition.CenterParent;
-                form.ClientSize = new Size(340, 220);
-                form.MaximizeBox = false;
-                form.MinimizeBox = false;
-
-                var labelWeight = new Label() { Left = 20, Top = 20, Text = "Weight (kg)", AutoSize = true };
-                var textBoxWeight = new TextBox() { Left = 20, Top = 45, Width = 280 };
-
-                var labelDescription = new Label() { Left = 20, Top = 80, Text = "Description", AutoSize = true };
-                var textBoxDescription = new TextBox() { Left = 20, Top = 105, Width = 280 };
-
-                var buttonOk = new Button() { Text = "Submit", Left = 120, Width = 80, Top = 160, DialogResult = DialogResult.OK };
-                form.Controls.Add(labelWeight);
-                form.Controls.Add(textBoxWeight);
-                form.Controls.Add(labelDescription);
-                form.Controls.Add(textBoxDescription);
-                form.Controls.Add(buttonOk);
-                form.AcceptButton = buttonOk;
-
-                buttonOk.Click += (s, e) =>
+                using (var form = new Form())
                 {
-                    if (string.IsNullOrWhiteSpace(textBoxWeight.Text))
-                    {
-                        MessageBox.Show("Weight is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.DialogResult = DialogResult.None;
-                        return;
-                    }
-                    if (!decimal.TryParse(textBoxWeight.Text, out var weight) || weight <= 0)
-                    {
-                        MessageBox.Show("Weight must be a positive number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.DialogResult = DialogResult.None;
-                        return;
-                    }
-                    if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
-                    {
-                        MessageBox.Show("Description is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        form.DialogResult = DialogResult.None;
-                        return;
-                    }
-                };
+                    form.Text = "Add Load";
+                    form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    form.ClientSize = new Size(340, 220);
+                    form.MaximizeBox = false;
+                    form.MinimizeBox = false;
 
-                if (form.ShowDialog(this) == DialogResult.OK)
-                {
-                    var weight = decimal.Parse(textBoxWeight.Text);
-                    var description = textBoxDescription.Text.Trim();
+                    var labelWeight = new Label() { Left = 20, Top = 20, Text = "Weight (kg)", AutoSize = true };
+                    var textBoxWeight = new TextBox() { Left = 20, Top = 45, Width = 280 };
 
-                    var load = new Load
+                    var labelDescription = new Label() { Left = 20, Top = 80, Text = "Description", AutoSize = true };
+                    var textBoxDescription = new TextBox() { Left = 20, Top = 105, Width = 280 };
+
+                    var buttonOk = new Button() { Text = "Submit", Left = 120, Width = 80, Top = 160, DialogResult = DialogResult.OK };
+                    form.Controls.Add(labelWeight);
+                    form.Controls.Add(textBoxWeight);
+                    form.Controls.Add(labelDescription);
+                    form.Controls.Add(textBoxDescription);
+                    form.Controls.Add(buttonOk);
+                    form.AcceptButton = buttonOk;
+
+                    buttonOk.Click += (s, e) =>
                     {
-                        JobId = job.JobId,
-                        Weight = weight,
-                        Description = description
+                        if (string.IsNullOrWhiteSpace(textBoxWeight.Text))
+                        {
+                            MessageBox.Show("Weight is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            form.DialogResult = DialogResult.None;
+                            return;
+                        }
+                        if (!decimal.TryParse(textBoxWeight.Text, out var weight) || weight <= 0)
+                        {
+                            MessageBox.Show("Weight must be a positive number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            form.DialogResult = DialogResult.None;
+                            return;
+                        }
+                        if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
+                        {
+                            MessageBox.Show("Description is required.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            form.DialogResult = DialogResult.None;
+                            return;
+                        }
                     };
 
-                    _appDbContext.Loads.Add(load);
-                    _appDbContext.SaveChanges();
-                    MessageBox.Show("Load added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var weight = decimal.Parse(textBoxWeight.Text);
+                        var description = textBoxDescription.Text.Trim();
+
+                        var load = new Load
+                        {
+                            JobId = job.JobId,
+                            Weight = weight,
+                            Description = description
+                        };
+
+                        _appDbContext.Loads.Add(load);
+                        _appDbContext.SaveChanges();
+                        MessageBox.Show("Load added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error adding load: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ShowViewLoadDialog(int jobId)
         {
-            using (var form = new Form())
+            try
             {
-                form.Text = "View Loads";
-                form.FormBorderStyle = FormBorderStyle.FixedDialog;
-                form.StartPosition = FormStartPosition.CenterParent;
-                form.ClientSize = new Size(500, 350);
-                form.MaximizeBox = false;
-                form.MinimizeBox = false;
-
-                var grid = new DataGridView()
+                using (var form = new Form())
                 {
-                    Left = 10,
-                    Top = 10,
-                    Width = 400,
-                    Height = 260,
-                    ReadOnly = false,
-                    AllowUserToAddRows = false,
-                    AllowUserToDeleteRows = false,
-                    SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                    EditMode = DataGridViewEditMode.EditProgrammatically,
-                    AutoGenerateColumns = true
-                };
+                    form.Text = "View Loads";
+                    form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    form.ClientSize = new Size(500, 350);
+                    form.MaximizeBox = false;
+                    form.MinimizeBox = false;
 
-                var btnClose = new Button()
-                {
-                    Text = "Close",
-                    Left = 200,
-                    Top = 285,
-                    Width = 100,
-                    DialogResult = DialogResult.Cancel
-                };
-
-                form.Controls.Add(grid);
-                form.Controls.Add(btnClose);
-                form.AcceptButton = btnClose;
-                form.CancelButton = btnClose;
-
-                // Load data
-                var loads = _appDbContext.Loads.Where(l => l.JobId == jobId).ToList();
-                var bindingList = new BindingList<Load>(loads);
-                grid.DataSource = bindingList;
-
-                // Allow inline edit for Weight and Description only
-                foreach (DataGridViewColumn col in grid.Columns)
-                {
-                    if (col.Name == "Weight" || col.Name == "Description")
-                        col.ReadOnly = false;
-                    else
-                        col.ReadOnly = true;
-
-                    if (col.Name == "JobId" || col.Name == "TransportUnitId" || col.Name == "Job" || col.Name == "TransportUnit")
+                    var grid = new DataGridView()
                     {
-                        col.Visible = false; // Hide ID columns
-                    }
-                    if (col.Name == "LoadId")
+                        Left = 10,
+                        Top = 10,
+                        Width = 400,
+                        Height = 260,
+                        ReadOnly = false,
+                        AllowUserToAddRows = false,
+                        AllowUserToDeleteRows = false,
+                        SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                        EditMode = DataGridViewEditMode.EditProgrammatically,
+                        AutoGenerateColumns = true
+                    };
+
+                    var btnClose = new Button()
                     {
-                        col.HeaderText = "Load ID"; // Rename LoadId column
-                        col.Width = 80; // Set a fixed width for LoadId column
+                        Text = "Close",
+                        Left = 200,
+                        Top = 285,
+                        Width = 100,
+                        DialogResult = DialogResult.Cancel
+                    };
+
+                    form.Controls.Add(grid);
+                    form.Controls.Add(btnClose);
+                    form.AcceptButton = btnClose;
+                    form.CancelButton = btnClose;
+
+                    // Load data
+                    var loads = _appDbContext.Loads.Where(l => l.JobId == jobId).ToList();
+                    var bindingList = new BindingList<Load>(loads);
+                    grid.DataSource = bindingList;
+
+                    // Allow inline edit for Weight and Description only
+                    foreach (DataGridViewColumn col in grid.Columns)
+                    {
+                        if (col.Name == "Weight" || col.Name == "Description")
+                            col.ReadOnly = false;
+                        else
+                            col.ReadOnly = true;
+
+                        if (col.Name == "JobId" || col.Name == "TransportUnitId" || col.Name == "Job" || col.Name == "TransportUnit")
+                        {
+                            col.Visible = false; // Hide ID columns
+                        }
+                        if (col.Name == "LoadId")
+                        {
+                            col.HeaderText = "Load ID"; // Rename LoadId column
+                            col.Width = 80; // Set a fixed width for LoadId column
+                        }
                     }
+
+                    grid.CellDoubleClick += (s, e) =>
+                    {
+                        if (e.RowIndex >= 0 && (grid.Columns[e.ColumnIndex].Name == "Weight" || grid.Columns[e.ColumnIndex].Name == "Description"))
+                        {
+                            grid.CurrentCell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                            grid.BeginEdit(true);
+                        }
+                    };
+
+                    grid.CellEndEdit += (s, e) =>
+                    {
+                        if (e.RowIndex < 0) return;
+                        var load = grid.Rows[e.RowIndex].DataBoundItem as Load;
+                        if (load != null)
+                        {
+                            _appDbContext.Loads.Update(load);
+                            _appDbContext.SaveChanges();
+                        }
+                    };
+
+                    form.ShowDialog(this);
                 }
-
-                grid.CellDoubleClick += (s, e) =>
-                {
-                    if (e.RowIndex >= 0 && (grid.Columns[e.ColumnIndex].Name == "Weight" || grid.Columns[e.ColumnIndex].Name == "Description"))
-                    {
-                        grid.CurrentCell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                        grid.BeginEdit(true);
-                    }
-                };
-
-                grid.CellEndEdit += (s, e) =>
-                {
-                    if (e.RowIndex < 0) return;
-                    var load = grid.Rows[e.RowIndex].DataBoundItem as Load;
-                    if (load != null)
-                    {
-                        _appDbContext.Loads.Update(load);
-                        _appDbContext.SaveChanges();
-                    }
-                };
-
-                form.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error viewing loads: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void jobsGridView_MouseMove(object sender, MouseEventArgs e)
         {
-            var hit = jobsGridView.HitTest(e.X, e.Y);
-            if (hit.Type == DataGridViewHitTestType.Cell && hit.ColumnIndex == jobsGridView.Columns["Actions"].Index && hit.RowIndex >= 0)
+            try
             {
-                var cellRect = jobsGridView.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, false);
-                int deleteBtnWidth = 70;
-                int spacing = 10;
-                int addLoadBtnWidth = 80;
-                int viewLoadBtnWidth = cellRect.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
-
-                Rectangle deleteButton = new Rectangle(cellRect.Left + spacing, cellRect.Top + 5, deleteBtnWidth, cellRect.Height - 10);
-                Rectangle addLoad = new Rectangle(cellRect.Left + deleteBtnWidth + (2 * spacing), cellRect.Top + 5, addLoadBtnWidth, cellRect.Height - 10);
-                Rectangle viewLoad = new Rectangle(cellRect.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), cellRect.Top + 5, viewLoadBtnWidth, cellRect.Height - 10);
-
-                var mouse = new Point(e.X, e.Y);
-
-                int hoveredButton = 0;
-                if (deleteButton.Contains(mouse))
-                    hoveredButton = 1;
-                else if (addLoad.Contains(mouse))
-                    hoveredButton = 2;
-                else if (viewLoad.Contains(mouse))
-                    hoveredButton = 3;
-
-                if (_hoveredRowIndex != hit.RowIndex || _hoveredButton != hoveredButton)
+                var hit = jobsGridView.HitTest(e.X, e.Y);
+                if (hit.Type == DataGridViewHitTestType.Cell && hit.ColumnIndex == jobsGridView.Columns["Actions"].Index && hit.RowIndex >= 0)
                 {
-                    _hoveredRowIndex = hit.RowIndex;
-                    _hoveredButton = hoveredButton;
-                    jobsGridView.InvalidateCell(hit.ColumnIndex, hit.RowIndex);
+                    var cellRect = jobsGridView.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, false);
+                    int deleteBtnWidth = 70;
+                    int spacing = 10;
+                    int addLoadBtnWidth = 80;
+                    int viewLoadBtnWidth = cellRect.Width - deleteBtnWidth - addLoadBtnWidth - (4 * spacing);
+
+                    Rectangle deleteButton = new Rectangle(cellRect.Left + spacing, cellRect.Top + 5, deleteBtnWidth, cellRect.Height - 10);
+                    Rectangle addLoad = new Rectangle(cellRect.Left + deleteBtnWidth + (2 * spacing), cellRect.Top + 5, addLoadBtnWidth, cellRect.Height - 10);
+                    Rectangle viewLoad = new Rectangle(cellRect.Left + deleteBtnWidth + addLoadBtnWidth + (3 * spacing), cellRect.Top + 5, viewLoadBtnWidth, cellRect.Height - 10);
+
+                    var mouse = new Point(e.X, e.Y);
+
+                    int hoveredButton = 0;
+                    if (deleteButton.Contains(mouse))
+                        hoveredButton = 1;
+                    else if (addLoad.Contains(mouse))
+                        hoveredButton = 2;
+                    else if (viewLoad.Contains(mouse))
+                        hoveredButton = 3;
+
+                    if (_hoveredRowIndex != hit.RowIndex || _hoveredButton != hoveredButton)
+                    {
+                        _hoveredRowIndex = hit.RowIndex;
+                        _hoveredButton = hoveredButton;
+                        jobsGridView.InvalidateCell(hit.ColumnIndex, hit.RowIndex);
+                    }
+                }
+                else
+                {
+                    if (_hoveredRowIndex != -1 || _hoveredButton != -1)
+                    {
+                        int prevRow = _hoveredRowIndex;
+                        _hoveredRowIndex = -1;
+                        _hoveredButton = -1;
+                        if (prevRow >= 0)
+                            jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
+                    }
                 }
             }
-            else
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error handling mouse move: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void jobsGridView_MouseLeave(object sender, EventArgs e)
+        {
+            try
             {
                 if (_hoveredRowIndex != -1 || _hoveredButton != -1)
                 {
@@ -391,23 +476,22 @@ namespace e_shift_app.views.customer
                         jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
                 }
             }
-        }
-
-        private void jobsGridView_MouseLeave(object sender, EventArgs e)
-        {
-            if (_hoveredRowIndex != -1 || _hoveredButton != -1)
+            catch (Exception ex)
             {
-                int prevRow = _hoveredRowIndex;
-                _hoveredRowIndex = -1;
-                _hoveredButton = -1;
-                if (prevRow >= 0)
-                    jobsGridView.InvalidateCell(jobsGridView.Columns["Actions"].Index, prevRow);
+                MessageBox.Show($"Error handling mouse leave: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            LoadJobs();
+            try
+            {
+                LoadJobs();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error refreshing jobs: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

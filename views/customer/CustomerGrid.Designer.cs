@@ -42,6 +42,7 @@
             btnCreateCustomer = new Button();
             btnRefresh = new Button();
             pictureBox1 = new PictureBox();
+            btnDownload = new Button();
             ((System.ComponentModel.ISupportInitialize)customerDatagrid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)customerBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -159,12 +160,23 @@
             pictureBox1.TabIndex = 3;
             pictureBox1.TabStop = false;
             // 
+            // btnDownload
+            // 
+            btnDownload.Location = new Point(1124, 615);
+            btnDownload.Name = "btnDownload";
+            btnDownload.Size = new Size(152, 27);
+            btnDownload.TabIndex = 4;
+            btnDownload.Text = "Download CSV";
+            btnDownload.UseVisualStyleBackColor = true;
+            btnDownload.Click += btnDownload_Click;
+            // 
             // CustomerGridView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
-            ClientSize = new Size(1324, 630);
+            ClientSize = new Size(1324, 654);
+            Controls.Add(btnDownload);
             Controls.Add(pictureBox1);
             Controls.Add(btnRefresh);
             Controls.Add(btnCreateCustomer);
@@ -193,5 +205,6 @@
         private Button btnCreateCustomer;
         private Button btnRefresh;
         private PictureBox pictureBox1;
+        private Button btnDownload;
     }
 }
