@@ -28,6 +28,10 @@ namespace e_shift_app.views.customer
             _provider = provider;
         }
 
+        /// <summary>
+        /// Initialize the customers grid UI and wire up event handlers.
+        /// Loads customers from the database and configures the actions column.
+        /// </summary>
         private void CustomerGrid_Load(object sender, EventArgs e)
         {
             try
@@ -89,6 +93,9 @@ namespace e_shift_app.views.customer
             }
         }
 
+        /// <summary>
+        /// Load customers from the database into the grid's data source.
+        /// </summary>
         private void LoadCustomers()
         {
             try
@@ -103,7 +110,9 @@ namespace e_shift_app.views.customer
             }
         }
 
-
+        /// <summary>
+        /// Persist edits for a customer row back to the database.
+        /// </summary>
         private void customerDatagrid_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
         {
             try
@@ -123,6 +132,9 @@ namespace e_shift_app.views.customer
             }
         }
 
+        /// <summary>
+        /// Paint custom action buttons (Delete, Reset Password) inside the Actions column.
+        /// </summary>
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             try
@@ -156,6 +168,11 @@ namespace e_shift_app.views.customer
                 MessageBox.Show($"Error rendering customer action buttons: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /// <summary>
+        /// Handle clicks on custom action buttons inside the Actions column.
+        /// Delegates to delete or reset password flows.
+        /// </summary>
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -211,6 +228,10 @@ namespace e_shift_app.views.customer
                 MessageBox.Show($"Error handling customer action click: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /// <summary>
+        /// Show dialog to reset a customer's password and persist the hashed password.
+        /// </summary>
         private void ShowResetPasswordDialog(Customer customer)
         {
             try
@@ -269,6 +290,10 @@ namespace e_shift_app.views.customer
                 MessageBox.Show($"Error resetting password: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        /// <summary>
+        /// Track mouse movement to show hover state for action buttons.
+        /// </summary>
         private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
         {
             try
@@ -317,6 +342,9 @@ namespace e_shift_app.views.customer
             }
         }
 
+        /// <summary>
+        /// Clear hover state when the mouse leaves the datagrid.
+        /// </summary>
         private void dataGridView1_MouseLeave(object sender, EventArgs e)
         {
             try
@@ -336,6 +364,9 @@ namespace e_shift_app.views.customer
             }
         }
 
+        /// <summary>
+        /// Open the CustomerForm to create a new customer.
+        /// </summary>
         private void btnCreateCustomer_Click(object sender, EventArgs e)
         {
             try
@@ -349,6 +380,9 @@ namespace e_shift_app.views.customer
             }
         }
 
+        /// <summary>
+        /// Reload the customers list from the database.
+        /// </summary>
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             try
@@ -361,6 +395,9 @@ namespace e_shift_app.views.customer
             }
         }
 
+        /// <summary>
+        /// Export visible data columns (excluding Actions) to a CSV file.
+        /// </summary>
         private void btnDownload_Click(object sender, EventArgs e)
         {
             try

@@ -32,6 +32,9 @@ namespace e_shift_app.views.admin
 
         }
 
+        /// <summary>
+        /// Open Admin grid. Resolved from DI container.
+        /// </summary>
         private void btnAdmins_Click(object sender, EventArgs e)
         {
             try
@@ -46,6 +49,9 @@ namespace e_shift_app.views.admin
             }
         }
 
+        /// <summary>
+        /// Open Customer grid view resolved from DI.
+        /// </summary>
         private void btnCustomers_Click(object sender, EventArgs e)
         {
             try
@@ -59,6 +65,9 @@ namespace e_shift_app.views.admin
             }
         }
 
+        /// <summary>
+        /// Open Transport Unit management grid.
+        /// </summary>
         private void btnTransportUnit_Click(object sender, EventArgs e)
         {
             try
@@ -72,6 +81,10 @@ namespace e_shift_app.views.admin
             }
         }
 
+        /// <summary>
+        /// Form load: configure grid appearance and wire event handlers.
+        /// Loads jobs from the database into a BindingList and sets up the Actions column.
+        /// </summary>
         private void AdminDashboard_Load(object sender, EventArgs e)
         {
             try
@@ -116,6 +129,10 @@ namespace e_shift_app.views.admin
                 MessageBox.Show($"Error initializing Admin dashboard: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        /// <summary>
+        /// Load all jobs from the database into the grid's data source.
+        /// Uses a BindingList to support runtime collection changes.
+        /// </summary>
         private void LoadJobs()
         {
             try
@@ -129,8 +146,6 @@ namespace e_shift_app.views.admin
                 MessageBox.Show($"Error loading jobs: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        // removed editing-related methods
 
         // Helper to get all button rectangles for a given cell
         private List<(string Name, Rectangle Rect)> GetActionButtonRects(Rectangle cellBounds, Job job)
@@ -181,6 +196,10 @@ namespace e_shift_app.views.admin
             return rects;
         }
 
+        /// <summary>
+        /// Paint the action buttons inside the Actions column cell.
+        /// The visual state changes when hovered based on internal hover tracking.
+        /// </summary>
         private void jobsGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             try
@@ -221,6 +240,10 @@ namespace e_shift_app.views.admin
             }
         }
 
+        /// <summary>
+        /// Handle clicks within the Actions cell by testing which button rectangle contains the mouse point.
+        /// Dispatches to specific handlers like delete, approval, add/view load, and update status.
+        /// </summary>
         private void jobsGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -274,6 +297,12 @@ namespace e_shift_app.views.admin
             }
         }
 
+        /// <summary>
+        /// Popup to update job status. Supports transitions:
+        /// - Approved -> Inprogress (default) or Completed
+        /// - Inprogress -> Completed
+        /// When Completed, associated transport resources are set to Available.
+        /// </summary>
         private void ShowUpdateStatusPopup(Job job)
         {
             try
