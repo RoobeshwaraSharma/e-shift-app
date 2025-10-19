@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomerGridView));
             customerDatagrid = new DataGridView();
             Id = new DataGridViewTextBoxColumn();
             nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -40,17 +41,20 @@
             customerBindingSource1 = new BindingSource(components);
             btnCreateCustomer = new Button();
             btnRefresh = new Button();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)customerDatagrid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)customerBindingSource1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // customerDatagrid
             // 
             customerDatagrid.AutoGenerateColumns = false;
+            customerDatagrid.BackgroundColor = SystemColors.ActiveCaption;
             customerDatagrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             customerDatagrid.Columns.AddRange(new DataGridViewColumn[] { Id, nameDataGridViewTextBoxColumn, Username, addressDataGridViewTextBoxColumn, phoneNumberDataGridViewTextBoxColumn, emailDataGridViewTextBoxColumn, registeredDateDataGridViewTextBoxColumn });
             customerDatagrid.DataSource = customerBindingSource1;
-            customerDatagrid.Location = new Point(12, 103);
+            customerDatagrid.Location = new Point(30, 150);
             customerDatagrid.Name = "customerDatagrid";
             customerDatagrid.RowHeadersWidth = 51;
             customerDatagrid.Size = new Size(1246, 459);
@@ -126,9 +130,9 @@
             // 
             // btnCreateCustomer
             // 
-            btnCreateCustomer.Location = new Point(1005, 41);
+            btnCreateCustomer.Location = new Point(882, 51);
             btnCreateCustomer.Name = "btnCreateCustomer";
-            btnCreateCustomer.Size = new Size(152, 29);
+            btnCreateCustomer.Size = new Size(193, 54);
             btnCreateCustomer.TabIndex = 1;
             btnCreateCustomer.Text = "Create Customer";
             btnCreateCustomer.UseVisualStyleBackColor = true;
@@ -136,19 +140,32 @@
             // 
             // btnRefresh
             // 
-            btnRefresh.Location = new Point(1175, 41);
+            btnRefresh.Location = new Point(1111, 51);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(83, 29);
+            btnRefresh.Size = new Size(152, 54);
             btnRefresh.TabIndex = 2;
             btnRefresh.Text = "Refresh";
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(30, 18);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
+            // 
             // CustomerGridView
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1270, 574);
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(1324, 630);
+            Controls.Add(pictureBox1);
             Controls.Add(btnRefresh);
             Controls.Add(btnCreateCustomer);
             Controls.Add(customerDatagrid);
@@ -157,6 +174,7 @@
             Load += CustomerGrid_Load;
             ((System.ComponentModel.ISupportInitialize)customerDatagrid).EndInit();
             ((System.ComponentModel.ISupportInitialize)customerBindingSource1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -174,5 +192,6 @@
         private DataGridViewTextBoxColumn registeredDateDataGridViewTextBoxColumn;
         private Button btnCreateCustomer;
         private Button btnRefresh;
+        private PictureBox pictureBox1;
     }
 }

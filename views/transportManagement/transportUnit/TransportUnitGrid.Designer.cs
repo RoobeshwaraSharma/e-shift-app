@@ -29,9 +29,8 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TransportUnitGrid));
             transportUnitGridView = new DataGridView();
-            transportUnitBindingSource = new BindingSource(components);
-            btnAddTransportUnit = new Button();
             idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             Status = new DataGridViewTextBoxColumn();
             lorryIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -42,37 +41,27 @@
             AssistantName = new DataGridViewTextBoxColumn();
             containerIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             ContainerCapacity = new DataGridViewTextBoxColumn();
+            transportUnitBindingSource = new BindingSource(components);
+            btnAddTransportUnit = new Button();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)transportUnitGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)transportUnitBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // transportUnitGridView
             // 
             transportUnitGridView.AutoGenerateColumns = false;
-            transportUnitGridView.BackgroundColor = SystemColors.GradientInactiveCaption;
+            transportUnitGridView.BackgroundColor = SystemColors.ActiveCaption;
             transportUnitGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             transportUnitGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, Status, lorryIdDataGridViewTextBoxColumn, LorryNumber, driverIdDataGridViewTextBoxColumn, DriverName, assistantIdDataGridViewTextBoxColumn, AssistantName, containerIdDataGridViewTextBoxColumn, ContainerCapacity });
             transportUnitGridView.DataSource = transportUnitBindingSource;
             transportUnitGridView.GridColor = SystemColors.HotTrack;
-            transportUnitGridView.Location = new Point(22, 100);
+            transportUnitGridView.Location = new Point(22, 166);
             transportUnitGridView.Name = "transportUnitGridView";
             transportUnitGridView.RowHeadersWidth = 51;
             transportUnitGridView.Size = new Size(1263, 359);
             transportUnitGridView.TabIndex = 0;
-            // 
-            // transportUnitBindingSource
-            // 
-            transportUnitBindingSource.DataSource = typeof(models.TransportUnit);
-            // 
-            // btnAddTransportUnit
-            // 
-            btnAddTransportUnit.Location = new Point(1133, 42);
-            btnAddTransportUnit.Name = "btnAddTransportUnit";
-            btnAddTransportUnit.Size = new Size(152, 29);
-            btnAddTransportUnit.TabIndex = 1;
-            btnAddTransportUnit.Text = "Add Transport Unit";
-            btnAddTransportUnit.UseVisualStyleBackColor = true;
-            btnAddTransportUnit.Click += btnAddTransportUnit_Click;
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -153,11 +142,38 @@
             ContainerCapacity.Name = "ContainerCapacity";
             ContainerCapacity.Width = 125;
             // 
+            // transportUnitBindingSource
+            // 
+            transportUnitBindingSource.DataSource = typeof(models.TransportUnit);
+            // 
+            // btnAddTransportUnit
+            // 
+            btnAddTransportUnit.Location = new Point(1072, 82);
+            btnAddTransportUnit.Name = "btnAddTransportUnit";
+            btnAddTransportUnit.Size = new Size(152, 29);
+            btnAddTransportUnit.TabIndex = 1;
+            btnAddTransportUnit.Text = "Add Transport Unit";
+            btnAddTransportUnit.UseVisualStyleBackColor = true;
+            btnAddTransportUnit.Click += btnAddTransportUnit_Click;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(22, 24);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 2;
+            pictureBox1.TabStop = false;
+            // 
             // TransportUnitGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1297, 485);
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(1301, 551);
+            Controls.Add(pictureBox1);
             Controls.Add(btnAddTransportUnit);
             Controls.Add(transportUnitGridView);
             Name = "TransportUnitGrid";
@@ -165,6 +181,7 @@
             Load += TransportUnitGrid_Load;
             ((System.ComponentModel.ISupportInitialize)transportUnitGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)transportUnitBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -183,5 +200,6 @@
         private DataGridViewTextBoxColumn AssistantName;
         private DataGridViewTextBoxColumn containerIdDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn ContainerCapacity;
+        private PictureBox pictureBox1;
     }
 }

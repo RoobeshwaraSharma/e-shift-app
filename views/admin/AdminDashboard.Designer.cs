@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdminDashboard));
             btnCustomers = new Button();
             btnAdmins = new Button();
             groupBox1 = new GroupBox();
@@ -47,10 +48,12 @@
             btnContainer = new Button();
             btnLorry = new Button();
             btnTransportUnit = new Button();
+            pictureBox1 = new PictureBox();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)jobsGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jobBindingSource).BeginInit();
             groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // btnCustomers
@@ -77,7 +80,7 @@
             // 
             groupBox1.Controls.Add(btnCustomers);
             groupBox1.Controls.Add(btnAdmins);
-            groupBox1.Location = new Point(37, 26);
+            groupBox1.Location = new Point(181, 26);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(380, 134);
             groupBox1.TabIndex = 2;
@@ -87,15 +90,15 @@
             // jobsGridView
             // 
             jobsGridView.AutoGenerateColumns = false;
-            jobsGridView.BackgroundColor = SystemColors.ButtonFace;
+            jobsGridView.BackgroundColor = SystemColors.ActiveCaption;
             jobsGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             jobsGridView.Columns.AddRange(new DataGridViewColumn[] { jobIdDataGridViewTextBoxColumn, customerIdDataGridViewTextBoxColumn, startLocationDataGridViewTextBoxColumn, endLocationDataGridViewTextBoxColumn, startDateDataGridViewTextBoxColumn, endDateDataGridViewTextBoxColumn, statusDataGridViewTextBoxColumn });
             jobsGridView.DataSource = jobBindingSource;
             jobsGridView.GridColor = SystemColors.GradientActiveCaption;
-            jobsGridView.Location = new Point(59, 221);
+            jobsGridView.Location = new Point(25, 176);
             jobsGridView.Name = "jobsGridView";
             jobsGridView.RowHeadersWidth = 51;
-            jobsGridView.Size = new Size(1150, 349);
+            jobsGridView.Size = new Size(1197, 438);
             jobsGridView.TabIndex = 3;
             // 
             // jobIdDataGridViewTextBoxColumn
@@ -171,7 +174,7 @@
             groupBox2.Controls.Add(btnContainer);
             groupBox2.Controls.Add(btnLorry);
             groupBox2.Controls.Add(btnTransportUnit);
-            groupBox2.Location = new Point(509, 26);
+            groupBox2.Location = new Point(577, 26);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(660, 134);
             groupBox2.TabIndex = 4;
@@ -228,11 +231,24 @@
             btnTransportUnit.UseVisualStyleBackColor = true;
             btnTransportUnit.Click += btnTransportUnit_Click;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(12, 43);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 5;
+            pictureBox1.TabStop = false;
+            // 
             // AdminDashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.GradientInactiveCaption;
             ClientSize = new Size(1266, 670);
+            Controls.Add(pictureBox1);
             Controls.Add(groupBox2);
             Controls.Add(jobsGridView);
             Controls.Add(groupBox1);
@@ -243,6 +259,7 @@
             ((System.ComponentModel.ISupportInitialize)jobsGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)jobBindingSource).EndInit();
             groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -266,5 +283,6 @@
         private DataGridViewTextBoxColumn startDateDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn endDateDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
+        private PictureBox pictureBox1;
     }
 }

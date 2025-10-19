@@ -29,43 +29,32 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContainerGrid));
             containerGridView = new DataGridView();
-            containerBindingSource = new BindingSource(components);
-            btnAddContainer = new Button();
             idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             Status = new DataGridViewTextBoxColumn();
             capacityDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            containerBindingSource = new BindingSource(components);
+            btnAddContainer = new Button();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)containerGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)containerBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // containerGridView
             // 
             containerGridView.AutoGenerateColumns = false;
-            containerGridView.BackgroundColor = SystemColors.GradientInactiveCaption;
+            containerGridView.BackgroundColor = SystemColors.ActiveCaption;
             containerGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             containerGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, Status, capacityDataGridViewTextBoxColumn });
             containerGridView.DataSource = containerBindingSource;
             containerGridView.GridColor = SystemColors.HotTrack;
-            containerGridView.Location = new Point(53, 75);
+            containerGridView.Location = new Point(48, 153);
             containerGridView.Name = "containerGridView";
             containerGridView.RowHeadersWidth = 51;
-            containerGridView.Size = new Size(419, 187);
+            containerGridView.Size = new Size(526, 218);
             containerGridView.TabIndex = 0;
-            // 
-            // containerBindingSource
-            // 
-            containerBindingSource.DataSource = typeof(models.Container);
-            // 
-            // btnAddContainer
-            // 
-            btnAddContainer.Location = new Point(343, 27);
-            btnAddContainer.Name = "btnAddContainer";
-            btnAddContainer.Size = new Size(147, 29);
-            btnAddContainer.TabIndex = 1;
-            btnAddContainer.Text = "Add Container";
-            btnAddContainer.UseVisualStyleBackColor = true;
-            btnAddContainer.Click += btnAddContainer_Click;
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -92,11 +81,38 @@
             capacityDataGridViewTextBoxColumn.Name = "capacityDataGridViewTextBoxColumn";
             capacityDataGridViewTextBoxColumn.Width = 125;
             // 
+            // containerBindingSource
+            // 
+            containerBindingSource.DataSource = typeof(models.Container);
+            // 
+            // btnAddContainer
+            // 
+            btnAddContainer.Location = new Point(427, 67);
+            btnAddContainer.Name = "btnAddContainer";
+            btnAddContainer.Size = new Size(147, 29);
+            btnAddContainer.TabIndex = 1;
+            btnAddContainer.Text = "Add Container";
+            btnAddContainer.UseVisualStyleBackColor = true;
+            btnAddContainer.Click += btnAddContainer_Click;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(27, 27);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 2;
+            pictureBox1.TabStop = false;
+            // 
             // ContainerGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(518, 305);
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(599, 406);
+            Controls.Add(pictureBox1);
             Controls.Add(btnAddContainer);
             Controls.Add(containerGridView);
             Name = "ContainerGrid";
@@ -104,6 +120,7 @@
             Load += ContainerGrid_Load;
             ((System.ComponentModel.ISupportInitialize)containerGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)containerBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -115,5 +132,6 @@
         private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn capacityDataGridViewTextBoxColumn;
+        private PictureBox pictureBox1;
     }
 }

@@ -4,15 +4,6 @@ using e_shift_app.models;
 using e_shift_app.views.admin;
 using e_shift_app.views.customer;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace e_shift_app.views.login
 {
@@ -49,7 +40,7 @@ namespace e_shift_app.views.login
                     var customerDashboard = _provider.GetRequiredService<CustomerDashboard>();
                     customerDashboard.Show();
                 }
-                else if (user.Role =="Admin")
+                else if (user.Role == "Admin")
                 {
                     // Resolve & show the grid form from DI
                     var adminDashboard = _provider.GetRequiredService<AdminDashboard>();

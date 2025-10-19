@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdminGrid));
             dataGridView1 = new DataGridView();
             idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             fullNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -37,17 +38,20 @@
             adminsBindingSource = new BindingSource(components);
             btnAddAdmin = new Button();
             btnRefresh = new Button();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)adminsBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
             // 
             dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.BackgroundColor = SystemColors.ActiveCaption;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, fullNameDataGridViewTextBoxColumn, usernameDataGridViewTextBoxColumn, CreatedDate });
             dataGridView1.DataSource = adminsBindingSource;
-            dataGridView1.Location = new Point(67, 75);
+            dataGridView1.Location = new Point(55, 156);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.Size = new Size(988, 391);
@@ -93,9 +97,9 @@
             // 
             // btnAddAdmin
             // 
-            btnAddAdmin.Location = new Point(780, 24);
+            btnAddAdmin.Location = new Point(706, 57);
             btnAddAdmin.Name = "btnAddAdmin";
-            btnAddAdmin.Size = new Size(145, 29);
+            btnAddAdmin.Size = new Size(182, 60);
             btnAddAdmin.TabIndex = 1;
             btnAddAdmin.Text = "Create New Admin";
             btnAddAdmin.UseVisualStyleBackColor = true;
@@ -103,19 +107,32 @@
             // 
             // btnRefresh
             // 
-            btnRefresh.Location = new Point(956, 24);
+            btnRefresh.Location = new Point(903, 57);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(99, 29);
+            btnRefresh.Size = new Size(152, 60);
             btnRefresh.TabIndex = 2;
             btnRefresh.Text = "Refresh";
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(29, 26);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
+            // 
             // AdminGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1109, 524);
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(1109, 580);
+            Controls.Add(pictureBox1);
             Controls.Add(btnRefresh);
             Controls.Add(btnAddAdmin);
             Controls.Add(dataGridView1);
@@ -124,6 +141,7 @@
             Load += AdminGrid_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)adminsBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -137,5 +155,6 @@
         private DataGridViewTextBoxColumn usernameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn CreatedDate;
         private Button btnRefresh;
+        private PictureBox pictureBox1;
     }
 }

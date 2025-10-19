@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomerDashboard));
             button1 = new Button();
             jobsGridView = new DataGridView();
             JobId = new DataGridViewTextBoxColumn();
@@ -39,15 +40,17 @@
             statusDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             jobBindingSource = new BindingSource(components);
             btnRefresh = new Button();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)jobsGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jobBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(975, 31);
+            button1.Location = new Point(841, 48);
             button1.Name = "button1";
-            button1.Size = new Size(94, 29);
+            button1.Size = new Size(149, 48);
             button1.TabIndex = 0;
             button1.Text = "Create Job";
             button1.UseVisualStyleBackColor = true;
@@ -56,10 +59,11 @@
             // jobsGridView
             // 
             jobsGridView.AutoGenerateColumns = false;
+            jobsGridView.BackgroundColor = SystemColors.ActiveCaption;
             jobsGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             jobsGridView.Columns.AddRange(new DataGridViewColumn[] { JobId, StartLocation, EndLocation, StartDate, EndDate, statusDataGridViewTextBoxColumn });
             jobsGridView.DataSource = jobBindingSource;
-            jobsGridView.Location = new Point(38, 97);
+            jobsGridView.Location = new Point(36, 142);
             jobsGridView.Name = "jobsGridView";
             jobsGridView.RowHeadersWidth = 51;
             jobsGridView.Size = new Size(1133, 404);
@@ -125,19 +129,31 @@
             // 
             // btnRefresh
             // 
-            btnRefresh.Location = new Point(1086, 31);
+            btnRefresh.Location = new Point(1014, 48);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(94, 29);
+            btnRefresh.Size = new Size(155, 48);
             btnRefresh.TabIndex = 2;
             btnRefresh.Text = "Refresh";
             btnRefresh.UseVisualStyleBackColor = true;
             btnRefresh.Click += btnRefresh_Click;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(36, 22);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 3;
+            pictureBox1.TabStop = false;
+            // 
             // CustomerDashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.GradientInactiveCaption;
             ClientSize = new Size(1206, 558);
+            Controls.Add(pictureBox1);
             Controls.Add(btnRefresh);
             Controls.Add(jobsGridView);
             Controls.Add(button1);
@@ -146,6 +162,7 @@
             Load += CustomerDashboard_Load;
             ((System.ComponentModel.ISupportInitialize)jobsGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)jobBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -166,5 +183,6 @@
         private DataGridViewTextBoxColumn EndDate;
         private DataGridViewTextBoxColumn statusDataGridViewTextBoxColumn;
         private Button btnRefresh;
+        private PictureBox pictureBox1;
     }
 }

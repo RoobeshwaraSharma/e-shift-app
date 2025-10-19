@@ -29,44 +29,33 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DriverGrid));
             driverGridView = new DataGridView();
-            driverBindingSource = new BindingSource(components);
-            btnAddDriver = new Button();
             idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             nameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             LicenseNumber = new DataGridViewTextBoxColumn();
             Status = new DataGridViewTextBoxColumn();
+            driverBindingSource = new BindingSource(components);
+            btnAddDriver = new Button();
+            pictureBox1 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)driverGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)driverBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // driverGridView
             // 
             driverGridView.AutoGenerateColumns = false;
-            driverGridView.BackgroundColor = SystemColors.GradientInactiveCaption;
+            driverGridView.BackgroundColor = SystemColors.ActiveCaption;
             driverGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             driverGridView.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, nameDataGridViewTextBoxColumn, LicenseNumber, Status });
             driverGridView.DataSource = driverBindingSource;
             driverGridView.GridColor = SystemColors.HotTrack;
-            driverGridView.Location = new Point(72, 112);
+            driverGridView.Location = new Point(36, 153);
             driverGridView.Name = "driverGridView";
             driverGridView.RowHeadersWidth = 51;
-            driverGridView.Size = new Size(452, 275);
+            driverGridView.Size = new Size(587, 293);
             driverGridView.TabIndex = 0;
-            // 
-            // driverBindingSource
-            // 
-            driverBindingSource.DataSource = typeof(models.Driver);
-            // 
-            // btnAddDriver
-            // 
-            btnAddDriver.Location = new Point(450, 51);
-            btnAddDriver.Name = "btnAddDriver";
-            btnAddDriver.Size = new Size(94, 29);
-            btnAddDriver.TabIndex = 1;
-            btnAddDriver.Text = "Add Driver";
-            btnAddDriver.UseVisualStyleBackColor = true;
-            btnAddDriver.Click += btnAddDriver_Click;
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -102,11 +91,38 @@
             Status.Name = "Status";
             Status.Width = 125;
             // 
+            // driverBindingSource
+            // 
+            driverBindingSource.DataSource = typeof(models.Driver);
+            // 
+            // btnAddDriver
+            // 
+            btnAddDriver.Location = new Point(508, 62);
+            btnAddDriver.Name = "btnAddDriver";
+            btnAddDriver.Size = new Size(115, 38);
+            btnAddDriver.TabIndex = 1;
+            btnAddDriver.Text = "Add Driver";
+            btnAddDriver.UseVisualStyleBackColor = true;
+            btnAddDriver.Click += btnAddDriver_Click;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(22, 18);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 2;
+            pictureBox1.TabStop = false;
+            // 
             // DriverGrid
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(578, 419);
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(656, 475);
+            Controls.Add(pictureBox1);
             Controls.Add(btnAddDriver);
             Controls.Add(driverGridView);
             Name = "DriverGrid";
@@ -114,6 +130,7 @@
             Load += DriverGrid_Load;
             ((System.ComponentModel.ISupportInitialize)driverGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)driverBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -127,5 +144,6 @@
         private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn LicenseNumber;
         private DataGridViewTextBoxColumn Status;
+        private PictureBox pictureBox1;
     }
 }

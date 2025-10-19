@@ -29,6 +29,7 @@ namespace e_shift_app
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomerForm));
             txtName = new TextBox();
             label1 = new Label();
             txtAddress = new TextBox();
@@ -46,11 +47,13 @@ namespace e_shift_app
             txtUserPassword = new TextBox();
             label4 = new Label();
             txtConfirmPassword = new TextBox();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // txtName
             // 
-            txtName.Location = new Point(347, 45);
+            txtName.Location = new Point(389, 47);
             txtName.Name = "txtName";
             txtName.Size = new Size(248, 27);
             txtName.TabIndex = 0;
@@ -58,7 +61,7 @@ namespace e_shift_app
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(138, 48);
+            label1.Location = new Point(239, 54);
             label1.Name = "label1";
             label1.Size = new Size(49, 20);
             label1.TabIndex = 1;
@@ -66,7 +69,7 @@ namespace e_shift_app
             // 
             // txtAddress
             // 
-            txtAddress.Location = new Point(347, 101);
+            txtAddress.Location = new Point(389, 103);
             txtAddress.Name = "txtAddress";
             txtAddress.Size = new Size(248, 27);
             txtAddress.TabIndex = 2;
@@ -74,7 +77,7 @@ namespace e_shift_app
             // Address
             // 
             Address.AutoSize = true;
-            Address.Location = new Point(138, 104);
+            Address.Location = new Point(239, 110);
             Address.Name = "Address";
             Address.Size = new Size(62, 20);
             Address.TabIndex = 3;
@@ -82,7 +85,7 @@ namespace e_shift_app
             // 
             // txtPhoneNumber
             // 
-            txtPhoneNumber.Location = new Point(347, 160);
+            txtPhoneNumber.Location = new Point(389, 162);
             txtPhoneNumber.Name = "txtPhoneNumber";
             txtPhoneNumber.Size = new Size(248, 27);
             txtPhoneNumber.TabIndex = 4;
@@ -90,7 +93,7 @@ namespace e_shift_app
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(138, 163);
+            label2.Location = new Point(239, 169);
             label2.Name = "label2";
             label2.Size = new Size(108, 20);
             label2.TabIndex = 5;
@@ -98,7 +101,7 @@ namespace e_shift_app
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(347, 223);
+            txtEmail.Location = new Point(389, 225);
             txtEmail.Name = "txtEmail";
             txtEmail.Size = new Size(248, 27);
             txtEmail.TabIndex = 6;
@@ -106,7 +109,7 @@ namespace e_shift_app
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(138, 226);
+            label3.Location = new Point(239, 232);
             label3.Name = "label3";
             label3.Size = new Size(46, 20);
             label3.TabIndex = 7;
@@ -114,7 +117,7 @@ namespace e_shift_app
             // 
             // btnSubmit
             // 
-            btnSubmit.Location = new Point(267, 455);
+            btnSubmit.Location = new Point(290, 457);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(94, 29);
             btnSubmit.TabIndex = 8;
@@ -124,7 +127,7 @@ namespace e_shift_app
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(527, 455);
+            btnCancel.Location = new Point(506, 457);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(94, 29);
             btnCancel.TabIndex = 9;
@@ -140,7 +143,7 @@ namespace e_shift_app
             // lblUsername
             // 
             lblUsername.AutoSize = true;
-            lblUsername.Location = new Point(138, 279);
+            lblUsername.Location = new Point(239, 285);
             lblUsername.Name = "lblUsername";
             lblUsername.Size = new Size(75, 20);
             lblUsername.TabIndex = 11;
@@ -150,7 +153,7 @@ namespace e_shift_app
             // txtPassword
             // 
             txtPassword.AutoSize = true;
-            txtPassword.Location = new Point(138, 334);
+            txtPassword.Location = new Point(239, 340);
             txtPassword.Name = "txtPassword";
             txtPassword.Size = new Size(70, 20);
             txtPassword.TabIndex = 12;
@@ -158,14 +161,14 @@ namespace e_shift_app
             // 
             // txtUsername
             // 
-            txtUsername.Location = new Point(347, 276);
+            txtUsername.Location = new Point(389, 278);
             txtUsername.Name = "txtUsername";
             txtUsername.Size = new Size(248, 27);
             txtUsername.TabIndex = 13;
             // 
             // txtUserPassword
             // 
-            txtUserPassword.Location = new Point(347, 331);
+            txtUserPassword.Location = new Point(389, 333);
             txtUserPassword.Name = "txtUserPassword";
             txtUserPassword.PasswordChar = '*';
             txtUserPassword.Size = new Size(248, 27);
@@ -175,7 +178,7 @@ namespace e_shift_app
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(138, 390);
+            label4.Location = new Point(239, 396);
             label4.Name = "label4";
             label4.Size = new Size(127, 20);
             label4.TabIndex = 15;
@@ -183,18 +186,31 @@ namespace e_shift_app
             // 
             // txtConfirmPassword
             // 
-            txtConfirmPassword.Location = new Point(347, 387);
+            txtConfirmPassword.Location = new Point(389, 389);
             txtConfirmPassword.Name = "txtConfirmPassword";
             txtConfirmPassword.PasswordChar = '*';
             txtConfirmPassword.Size = new Size(248, 27);
             txtConfirmPassword.TabIndex = 16;
             txtConfirmPassword.UseSystemPasswordChar = true;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.BorderStyle = BorderStyle.Fixed3D;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(12, 12);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(163, 107);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 17;
+            pictureBox1.TabStop = false;
+            // 
             // CustomerForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(780, 523);
+            BackColor = SystemColors.GradientInactiveCaption;
+            ClientSize = new Size(708, 516);
+            Controls.Add(pictureBox1);
             Controls.Add(txtConfirmPassword);
             Controls.Add(label4);
             Controls.Add(txtUserPassword);
@@ -214,6 +230,7 @@ namespace e_shift_app
             Name = "CustomerForm";
             Text = "Customer Form";
             Load += CustomerForm_Load;
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -237,5 +254,6 @@ namespace e_shift_app
         private TextBox txtUserPassword;
         private Label label4;
         private TextBox txtConfirmPassword;
+        private PictureBox pictureBox1;
     }
 }
